@@ -1,0 +1,29 @@
+﻿<UserControl x:Class="InventoryERP.Presentation.Views.DashboardView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="clr-namespace:InventoryERP.Presentation.Views.Controls;assembly=InventoryERP.Presentation"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             mc:Ignorable="d"
+             d:DesignHeight="600" d:DesignWidth="800">
+  <Grid Background="Transparent">
+    <Grid.RowDefinitions>
+      <RowDefinition Height="*"/>
+      <RowDefinition Height="*"/>
+    </Grid.RowDefinitions>
+    <Grid.ColumnDefinitions>
+      <ColumnDefinition Width="*"/>
+      <ColumnDefinition Width="*"/>
+    </Grid.ColumnDefinitions>
+
+    <!-- Placeholders; actual widget instances are created in code-behind so DI can provide services -->
+    <Border x:Name="Widget00" Grid.Row="0" Grid.Column="0" Padding="6" Background="Transparent"
+            AutomationProperties.Name="ThisMonthSalesWidgetContainer"/>
+    <Border x:Name="Widget01" Grid.Row="0" Grid.Column="1" Padding="6" Background="Transparent"
+            AutomationProperties.Name="OverdueReceivablesWidgetContainer"/>
+    <Border x:Name="Widget10" Grid.Row="1" Grid.Column="0" Padding="6" Background="Transparent"
+            AutomationProperties.Name="CashBankBalancesWidgetContainer"/>
+    <Border x:Name="Widget11" Grid.Row="1" Grid.Column="1" Padding="6" Background="Transparent"
+            AutomationProperties.Name="TopProductsWidgetContainer"/>
+  </Grid>
+</UserControl>

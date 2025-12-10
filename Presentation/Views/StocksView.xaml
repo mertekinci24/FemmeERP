@@ -1,0 +1,195 @@
+<UserControl x:Class="InventoryERP.Presentation.Views.StocksView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:common="clr-namespace:InventoryERP.Presentation.Common"
+             xmlns:converters="clr-namespace:InventoryERP.Presentation.Converters"
+             xmlns:dgx="urn:tom-englert.de/DataGridExtensions">
+  <DockPanel>
+    <!-- Üst Araç Çubuğu -->
+    <StackPanel DockPanel.Dock="Top" Margin="0,0,0,8">
+      <StackPanel Orientation="Horizontal" Margin="0,0,0,8" VerticalAlignment="Center">
+        <Button Content="Yeni Stok Kartı"
+                Command="{Binding NewStockCmd}"
+                Width="140" />
+        <Button Content="SEÇİLİ STOĞU SİL"
+                Command="{Binding DeleteStockCmd}"
+                CommandParameter="{Binding ElementName=StockGrid, Path=SelectedItem}"
+                Focusable="False"
+                Background="#FFDDDD" Foreground="Red" FontWeight="Bold"
+                Margin="10,0,0,0" Padding="10,5"
+                VerticalAlignment="Center" />
+        <Button Content="Excel'den Transfer"
+                Command="{Binding ImportCsvCmd}"
+                Width="160"
+                Margin="10,0,0,0" />
+        <Button Content="Yenile"
+                Command="{Binding RefreshCmd}"
+                Width="100"
+                Margin="10,0,0,0" />
+        
+        <!-- R-282: Show Inactive Checkbox -->
+        <CheckBox Content="Pasifleri Göster"
+                  IsChecked="{Binding ShowInactive}"
+                  VerticalAlignment="Center"
+                  Margin="12,0,0,0"
+                  ToolTip="Aktif olmayan (pasif) ürünleri de göster" />
+        
+        <!-- R-210: Warehouse Filter -->
+        <ComboBox ItemsSource="{Binding Warehouses}"
+                  SelectedItem="{Binding SelectedWarehouseFilter}"
+                  DisplayMemberPath="Name"
+                  Width="150"
+                  Margin="10,0,0,0"
+                  ToolTip="Depoya göre filtrele" />
+                  
+        <TextBlock Text="{Binding Rows.Count, StringFormat='{}{0} kayıt'}"
+                   VerticalAlignment="Center"
+                   Margin="12,0,0,0" />
+      </StackPanel>
+
+      <!-- Hızlı Arama -->
+      <DockPanel>
+        <TextBlock Text="Hızlı Arama:" DockPanel.Dock="Left" VerticalAlignment="Center" Margin="0,0,8,0" FontWeight="SemiBold" />
+        <Button Content="Temizle" DockPanel.Dock="Right" Command="{Binding ClearSearchCmd}" Width="80" Margin="8,0,0,0" />
+        <TextBox Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"
+                 ToolTip="SKU, Ad veya Kategori'ye göre arayın" />
+      </DockPanel>
+    </StackPanel>
+
+    <!-- Liste -->
+    <DataGrid x:Name="StockGrid"
+              ItemsSource="{Binding Rows}"
+              AutoGenerateColumns="False"
+              dgx:DataGridFilter.IsAutoFilterEnabled="True"
+              IsReadOnly="True"
+              CanUserAddRows="False"
+              CanUserDeleteRows="False"
+              SelectedItem="{Binding SelectedStock, Mode=TwoWay}"
+              GridLinesVisibility="Horizontal"
+              HeadersVisibility="Column">
+      <DataGrid.Resources>
+        <common:BindingProxy x:Key="Proxy" Data="{Binding}" />
+        <converters:FirstLetterConverter x:Key="FirstLetterConverter" />
+        <!-- R-284: Soft Selection to keep data colors visible -->
+        <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="#E0E7FF"/>
+        <SolidColorBrush x:Key="{x:Static SystemColors.HighlightTextBrushKey}" Color="#1F2937"/>
+        <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightBrushKey}" Color="#F3F4F6"/>
+        <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightTextBrushKey}" Color="#374151"/>
+      </DataGrid.Resources>
+      <DataGrid.RowStyle>
+        <Style TargetType="DataGridRow" BasedOn="{StaticResource {x:Type DataGridRow}}">
+          <Setter Property="ContextMenu">
+            <Setter.Value>
+              <ContextMenu>
+                <MenuItem Header="Düzenle"
+                          Command="{Binding Data.EditItemCmd, Source={StaticResource Proxy}}"
+                          CommandParameter="{Binding}" />
+                <MenuItem Header="Sil"
+                          Command="{Binding Data.DeleteStockCmd, Source={StaticResource Proxy}}"
+                          CommandParameter="{Binding}" />
+                <Separator />
+                <MenuItem Header="Stok Hareketleri"
+                          Command="{Binding Data.ShowMovementsCmd, Source={StaticResource Proxy}}"
+                          CommandParameter="{Binding}" />
+                <MenuItem Header="Hızlı Düzeltme"
+                          Command="{Binding Data.CreateAdjustmentDocumentCmd, Source={StaticResource Proxy}}"
+                          CommandParameter="{Binding}" />
+                <MenuItem Header="Barkod Yazdır"
+                          Command="{Binding Data.PrintBarcodeCmd, Source={StaticResource Proxy}}"
+                          CommandParameter="{Binding}" />
+              </ContextMenu>
+            </Setter.Value>
+          </Setter>
+        </Style>
+      </DataGrid.RowStyle>
+      <DataGrid.Columns>
+        <!-- R-275: Product Icon (First letter of Name in circular badge) -->
+        <DataGridTemplateColumn Header="" Width="40" IsReadOnly="True">
+          <DataGridTemplateColumn.CellTemplate>
+            <DataTemplate>
+              <Border Width="28" Height="28" CornerRadius="14" 
+                      Background="#6366F1" HorizontalAlignment="Center">
+                <TextBlock Text="{Binding Name, Converter={StaticResource FirstLetterConverter}, FallbackValue='?'}"
+                           Foreground="White" FontWeight="Bold" FontSize="12"
+                           HorizontalAlignment="Center" VerticalAlignment="Center" />
+              </Border>
+            </DataTemplate>
+          </DataGridTemplateColumn.CellTemplate>
+        </DataGridTemplateColumn>
+        
+        <!-- Identity Columns -->
+        <DataGridTextColumn Header="SKU" Binding="{Binding Sku}" Width="100">
+          <DataGridTextColumn.ElementStyle>
+            <Style TargetType="TextBlock">
+              <Setter Property="FontWeight" Value="SemiBold" />
+              <Setter Property="Foreground" Value="#1E40AF" />
+            </Style>
+          </DataGridTextColumn.ElementStyle>
+        </DataGridTextColumn>
+        <DataGridTextColumn Header="Barkod" Binding="{Binding Barcode}" Width="110" />
+        <DataGridTextColumn Header="Marka" Binding="{Binding Brand}" Width="90" />
+        <DataGridTextColumn Header="Kategori" Binding="{Binding Category}" Width="100" />
+        <DataGridTextColumn Header="Ürün Adı" Binding="{Binding Name}" Width="*" />
+        <DataGridTextColumn Header="Birim" Binding="{Binding BaseUom}" Width="60" />
+        
+        <!-- Financial Columns -->
+        <DataGridTextColumn Header="Maliyet" Binding="{Binding Cost, StringFormat='{}{0:N2}'}" Width="85">
+          <DataGridTextColumn.ElementStyle>
+            <Style TargetType="TextBlock">
+              <Setter Property="HorizontalAlignment" Value="Right" />
+              <Setter Property="Foreground" Value="#DC2626" />
+            </Style>
+          </DataGridTextColumn.ElementStyle>
+        </DataGridTextColumn>
+        <DataGridTextColumn Header="Satış Fiyatı" Binding="{Binding SalesPrice, StringFormat='{}{0:N2}'}" Width="95">
+          <DataGridTextColumn.ElementStyle>
+            <Style TargetType="TextBlock">
+              <Setter Property="HorizontalAlignment" Value="Right" />
+              <Setter Property="Foreground" Value="#059669" />
+              <Setter Property="FontWeight" Value="SemiBold" />
+            </Style>
+          </DataGridTextColumn.ElementStyle>
+        </DataGridTextColumn>
+        
+        <!-- Stock Metrics -->
+        <DataGridTextColumn Header="Eldeki" Binding="{Binding OnHandQty, StringFormat='{}{0:N2}'}" Width="80">
+          <DataGridTextColumn.ElementStyle>
+            <Style TargetType="TextBlock">
+              <Setter Property="HorizontalAlignment" Value="Right" />
+            </Style>
+          </DataGridTextColumn.ElementStyle>
+        </DataGridTextColumn>
+        <DataGridTextColumn Header="Rezerve" Binding="{Binding ReservedQty, StringFormat='{}{0:N2}'}" Width="75">
+          <DataGridTextColumn.ElementStyle>
+            <Style TargetType="TextBlock">
+              <Setter Property="HorizontalAlignment" Value="Right" />
+              <Setter Property="FontStyle" Value="Italic" />
+              <Setter Property="Foreground" Value="#6B7280" />
+            </Style>
+          </DataGridTextColumn.ElementStyle>
+        </DataGridTextColumn>
+        
+        <!-- R-275: Available Qty with Stock Alert (Red if <= 0) -->
+        <DataGridTextColumn Header="Kullanılabilir" Binding="{Binding AvailableQty, StringFormat='{}{0:N2}'}" Width="95">
+          <DataGridTextColumn.ElementStyle>
+            <Style TargetType="TextBlock">
+              <Setter Property="HorizontalAlignment" Value="Right" />
+              <Setter Property="FontWeight" Value="Bold" />
+              <Setter Property="Foreground" Value="#2563EB" />
+              <Style.Triggers>
+                <!-- Stock Alert: Red if available is 0 or negative -->
+                <DataTrigger Binding="{Binding AvailableQty}" Value="0">
+                  <Setter Property="Foreground" Value="#DC2626" />
+                  <Setter Property="Background" Value="#FEE2E2" />
+                </DataTrigger>
+              </Style.Triggers>
+            </Style>
+          </DataGridTextColumn.ElementStyle>
+        </DataGridTextColumn>
+        
+        <DataGridTextColumn Header="KDV %" Binding="{Binding VatRate}" Width="55" />
+        <DataGridCheckBoxColumn Header="Aktif" Binding="{Binding Active}" Width="50" />
+      </DataGrid.Columns>
+    </DataGrid>
+  </DockPanel>
+</UserControl>

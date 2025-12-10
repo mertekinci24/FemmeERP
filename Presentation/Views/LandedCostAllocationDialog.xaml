@@ -1,0 +1,42 @@
+﻿<Window x:Class="InventoryERP.Presentation.Views.LandedCostAllocationDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Maliyet DaÄŸÄ±tÄ±mÄ±" Height="500" Width="800">
+  <Grid Margin="8">
+    <Grid.RowDefinitions>
+      <RowDefinition Height="Auto" />
+      <RowDefinition Height="*" />
+      <RowDefinition Height="Auto" />
+    </Grid.RowDefinitions>
+
+    <!-- Invoice selection -->
+    <StackPanel Orientation="Horizontal" Grid.Row="0" Margin="0,0,0,8">
+      <TextBlock Text="Maliyet FaturasÄ±:" VerticalAlignment="Center" Margin="0,0,8,0"/>
+      <ComboBox Width="320"
+                ItemsSource="{Binding PurchaseInvoices}"
+                SelectedValuePath="Id"
+                DisplayMemberPath="Number"
+                SelectedValue="{Binding SelectedInvoiceId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+      <Button Content="Yenile" Command="{Binding RefreshCmd}" Margin="8,0,0,0"/>
+      <TextBlock Text=" " Width="12"/>
+      <TextBlock Text="{Binding Error}" Foreground="Red" VerticalAlignment="Center"/>
+    </StackPanel>
+
+    <!-- Goods receipts selection -->
+    <DataGrid Grid.Row="1" ItemsSource="{Binding GoodsReceipts}" AutoGenerateColumns="False" CanUserAddRows="False">
+      <DataGrid.Columns>
+        <DataGridCheckBoxColumn Header="SeÃ§" Binding="{Binding IsSelected, Mode=TwoWay}" Width="60"/>
+        <DataGridTextColumn Header="No" Binding="{Binding Row.Number}" Width="120"/>
+        <DataGridTextColumn Header="Tarih" Binding="{Binding Row.Date, StringFormat='{}{0:yyyy-MM-dd}'}" Width="120"/>
+        <DataGridTextColumn Header="Cari" Binding="{Binding Row.Partner}" Width="*"/>
+        <DataGridTextColumn Header="BrÃ¼t" Binding="{Binding Row.GrossTry, StringFormat='{}{0:N2}'}" Width="120"/>
+      </DataGrid.Columns>
+    </DataGrid>
+
+    <!-- Actions -->
+    <StackPanel Orientation="Horizontal" Grid.Row="2" HorizontalAlignment="Right" Margin="0,8,0,0">
+      <Button Content="DaÄŸÄ±t" Command="{Binding AllocateCmd}" Margin="0,0,8,0"/>
+      <Button Content="Kapat" Command="{Binding CancelCmd}"/>
+    </StackPanel>
+  </Grid>
+</Window>

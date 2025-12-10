@@ -1,0 +1,23 @@
+﻿  Geri y├╝klenecek projeler belirleniyor...
+  Geri y├╝kleme i├ğin t├╝m projeler g├╝ncel.
+  Domain -> C:\Users\merte\Documents\FemmeERP_Cosmo\Domain\bin\Release\net8.0\Domain.dll
+  Persistence -> C:\Users\merte\Documents\FemmeERP_Cosmo\Persistence\bin\Release\net8.0\Persistence.dll
+  Application -> C:\Users\merte\Documents\FemmeERP_Cosmo\Application\bin\Release\net8.0\Application.dll
+  Infrastructure -> C:\Users\merte\Documents\FemmeERP_Cosmo\Infrastructure\bin\Release\net8.0\Infrastructure.dll
+C:\Users\merte\Documents\FemmeERP_Cosmo\Presentation\ShellViewModel.cs(90,78): warning CS8625: Null sabit de─şer, bo┼ş de─şer atanamayan ba┼şvuru t├╝r├╝ne d├Ân├╝┼şt├╝r├╝lemiyor. [C:\Users\merte\Documents\FemmeERP_Cosmo\Presentation\Presentation_zuly0m3j_wpftmp.csproj]
+C:\Users\merte\Documents\FemmeERP_Cosmo\Presentation\ViewModels\Cash\CashAccountListViewModel.cs(50,32): error CS1729: 'RelayCommand', 2 ba─ş─▒ms─▒z de─şi┼şkenlerini alan bir olu┼şturucu i├ğermiyor [C:\Users\merte\Documents\FemmeERP_Cosmo\Presentation\Presentation_zuly0m3j_wpftmp.csproj]
+C:\Users\merte\Documents\FemmeERP_Cosmo\Presentation\ViewModels\DocumentEditViewModel.cs(208,12): warning CS8618: Null atanamaz ├Âzellik 'AddBarcodeCmd', olu┼şturucudan ├ğ─▒k─▒┼ş yaparken null olmayan bir de─şer i├ğermelidir. 'Gerekli' de─şi┼ştiricisini ekleyin veya ├Âzellik de─şerini null atanabilir olarak bildirmeyi g├Âz ├Ân├╝nde bulundurun. [C:\Users\merte\Documents\FemmeERP_Cosmo\Presentation\Presentation_zuly0m3j_wpftmp.csproj]
+C:\Users\merte\Documents\FemmeERP_Cosmo\Presentation\ViewModels\DocumentsViewModel.cs(31,27): warning CS0169: 'DocumentsViewModel._newPurchaseInvCmd' alan─▒ hi├ğbir zaman kullan─▒lmaz [C:\Users\merte\Documents\FemmeERP_Cosmo\Presentation\Presentation_zuly0m3j_wpftmp.csproj]
+C:\Users\merte\Documents\FemmeERP_Cosmo\Presentation\Views\DocumentEditDialog.xaml.cs(20,18): warning CS0169: 'DocumentEditDialog._isClosing' alan─▒ hi├ğbir zaman kullan─▒lmaz [C:\Users\merte\Documents\FemmeERP_Cosmo\Presentation\Presentation_zuly0m3j_wpftmp.csproj]
+
+Olu┼şturma BA┼ŞARISIZ OLDU.
+
+C:\Users\merte\Documents\FemmeERP_Cosmo\Presentation\ShellViewModel.cs(90,78): warning CS8625: Null sabit de─şer, bo┼ş de─şer atanamayan ba┼şvuru t├╝r├╝ne d├Ân├╝┼şt├╝r├╝lemiyor. [C:\Users\merte\Documents\FemmeERP_Cosmo\Presentation\Presentation_zuly0m3j_wpftmp.csproj]
+C:\Users\merte\Documents\FemmeERP_Cosmo\Presentation\ViewModels\DocumentEditViewModel.cs(208,12): warning CS8618: Null atanamaz ├Âzellik 'AddBarcodeCmd', olu┼şturucudan ├ğ─▒k─▒┼ş yaparken null olmayan bir de─şer i├ğermelidir. 'Gerekli' de─şi┼ştiricisini ekleyin veya ├Âzellik de─şerini null atanabilir olarak bildirmeyi g├Âz ├Ân├╝nde bulundurun. [C:\Users\merte\Documents\FemmeERP_Cosmo\Presentation\Presentation_zuly0m3j_wpftmp.csproj]
+C:\Users\merte\Documents\FemmeERP_Cosmo\Presentation\ViewModels\DocumentsViewModel.cs(31,27): warning CS0169: 'DocumentsViewModel._newPurchaseInvCmd' alan─▒ hi├ğbir zaman kullan─▒lmaz [C:\Users\merte\Documents\FemmeERP_Cosmo\Presentation\Presentation_zuly0m3j_wpftmp.csproj]
+C:\Users\merte\Documents\FemmeERP_Cosmo\Presentation\Views\DocumentEditDialog.xaml.cs(20,18): warning CS0169: 'DocumentEditDialog._isClosing' alan─▒ hi├ğbir zaman kullan─▒lmaz [C:\Users\merte\Documents\FemmeERP_Cosmo\Presentation\Presentation_zuly0m3j_wpftmp.csproj]
+C:\Users\merte\Documents\FemmeERP_Cosmo\Presentation\ViewModels\Cash\CashAccountListViewModel.cs(50,32): error CS1729: 'RelayCommand', 2 ba─ş─▒ms─▒z de─şi┼şkenlerini alan bir olu┼şturucu i├ğermiyor [C:\Users\merte\Documents\FemmeERP_Cosmo\Presentation\Presentation_zuly0m3j_wpftmp.csproj]
+    4 Uyar─▒
+    1 Hata
+
+Ge├ğen S├╝re 00:00:58.94

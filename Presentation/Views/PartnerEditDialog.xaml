@@ -1,0 +1,362 @@
+﻿<Window x:Class="InventoryERP.Presentation.Views.PartnerEditDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:views="clr-namespace:InventoryERP.Presentation.Views"
+        mc:Ignorable="d"
+        Height="750" Width="600"
+        WindowStartupLocation="CenterOwner"
+        ResizeMode="NoResize"
+        Background="#F5F5F5">
+    
+    <Window.Resources>
+        <!-- R-089: String to Visibility converter for ErrorMessage -->
+        <views:StringToVisibilityConverter x:Key="StringToVis"/>
+        
+        <!-- Title converter (kept for potential future use) -->
+        <views:BoolToPartnerTitleConverter x:Key="BoolToTitleConverter"/>
+
+        <BooleanToVisibilityConverter x:Key="BoolToVis"/>
+        
+        <Style x:Key="LabelStyle" TargetType="TextBlock">
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Margin" Value="0,0,0,5"/>
+            <Setter Property="Foreground" Value="#333333"/>
+        </Style>
+        
+        <Style x:Key="TextBoxStyle" TargetType="TextBox">
+            <Setter Property="Height" Value="35"/>
+            <Setter Property="Padding" Value="8,0"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="BorderBrush" Value="#CCCCCC"/>
+            <Setter Property="BorderThickness" Value="1"/>
+        </Style>
+        
+        <Style x:Key="ComboBoxStyle" TargetType="ComboBox">
+            <Setter Property="Height" Value="35"/>
+            <Setter Property="Padding" Value="8,0"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="BorderBrush" Value="#CCCCCC"/>
+            <Setter Property="BorderThickness" Value="1"/>
+        </Style>
+    </Window.Resources>
+    
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        
+        <!-- Title -->
+        <TextBlock Grid.Row="0" 
+                   FontSize="20" 
+                   FontWeight="SemiBold"
+                   Foreground="#2196F3"
+                   Margin="0,0,0,20">
+            <TextBlock.Text>
+                <Binding Path="IsNewPartner">
+                    <Binding.Converter>
+                        <views:BoolToPartnerTitleConverter/>
+                    </Binding.Converter>
+                </Binding>
+            </TextBlock.Text>
+        </TextBlock>
+        
+        <!-- Error Message -->
+        <Border Grid.Row="1" 
+                Background="#FFEBEE" 
+                BorderBrush="#F44336"
+                BorderThickness="1"
+                CornerRadius="4"
+                Padding="10"
+                Margin="0,0,0,10"
+                Visibility="{Binding ErrorMessage, Converter={StaticResource StringToVis}}">
+            <TextBlock Text="{Binding ErrorMessage}" 
+                       Foreground="#D32F2F" 
+                       TextWrapping="Wrap"/>
+        </Border>
+        
+        <!-- Form + Hareketler Sekmesi -->
+        <TabControl Grid.Row="2" x:Name="MainTabControl">
+            <TabItem Header="📇 Kart">
+                <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="0,10,0,0">
+                    <StackPanel>
+                        <!-- Partner Type -->
+                        <TextBlock Text="Cari Tipi *" Style="{StaticResource LabelStyle}"/>
+                        <ComboBox ItemsSource="{Binding PartnerTypes}"
+                                  SelectedValue="{Binding PartnerType}"
+                                  DisplayMemberPath="Display"
+                                  SelectedValuePath="Value"
+                                  Style="{StaticResource ComboBoxStyle}"
+                                  Margin="0,0,0,15"/>
+                        
+                        <!-- Name -->
+                        <TextBlock Text="Cari Adı *" Style="{StaticResource LabelStyle}"/>
+                        <TextBox Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}"
+                                 Style="{StaticResource TextBoxStyle}"
+                                 Margin="0,0,0,15"/>
+                        
+                        <!-- Tax ID -->
+                        <TextBlock Text="Vergi Kimlik Numarası (VKN)" Style="{StaticResource LabelStyle}"/>
+                        <TextBox Text="{Binding TaxId, UpdateSourceTrigger=PropertyChanged}"
+                                 Style="{StaticResource TextBoxStyle}"
+                                 MaxLength="10"
+                                 Margin="0,0,0,15"/>
+                        
+                        <!-- National ID -->
+                        <TextBlock Text="T.C. Kimlik No (TCKN)" Style="{StaticResource LabelStyle}"/>
+                        <TextBox Text="{Binding NationalId, UpdateSourceTrigger=PropertyChanged}"
+                                 Style="{StaticResource TextBoxStyle}"
+                                 MaxLength="11"
+                                 Margin="0,0,0,15"/>
+                        
+                        <!-- Phone -->
+                        <TextBlock Text="Telefon" Style="{StaticResource LabelStyle}"/>
+                        <TextBox Text="{Binding Phone, UpdateSourceTrigger=PropertyChanged}"
+                                 Style="{StaticResource TextBoxStyle}"
+                                 Margin="0,0,0,15"/>
+                        
+                        <!-- Email -->
+                        <TextBlock Text="E-posta" Style="{StaticResource LabelStyle}"/>
+                        <TextBox Text="{Binding Email, UpdateSourceTrigger=PropertyChanged}"
+                                 Style="{StaticResource TextBoxStyle}"
+                                 Margin="0,0,0,15"/>
+                        
+                        <!-- Address -->
+                        <TextBlock Text="Adres" Style="{StaticResource LabelStyle}"/>
+                        <TextBox Text="{Binding Address, UpdateSourceTrigger=PropertyChanged}"
+                                 Height="80"
+                                 TextWrapping="Wrap"
+                                 AcceptsReturn="True"
+                                 VerticalScrollBarVisibility="Auto"
+                                 Padding="8"
+                                 VerticalContentAlignment="Top"
+                                 BorderBrush="#CCCCCC"
+                                 BorderThickness="1"
+                                 Margin="0,0,0,15"/>
+                        
+                        <!-- Payment Term Days (R-119) -->
+                        <TextBlock Text="Vade (Gün)" Style="{StaticResource LabelStyle}"/>
+                        <TextBox Text="{Binding PaymentTermDays, UpdateSourceTrigger=PropertyChanged}"
+                                 Style="{StaticResource TextBoxStyle}"
+                                 Margin="0,0,0,15"/>
+                        
+                        <!-- Credit Limit (R-119) -->
+                        <TextBlock Text="Risk Durumu (Kredi Limiti - TRY)" Style="{StaticResource LabelStyle}"/>
+                        <TextBox Text="{Binding CreditLimitTry, UpdateSourceTrigger=PropertyChanged, StringFormat=N2, ConverterCulture=tr-TR}"
+                                 Style="{StaticResource TextBoxStyle}"
+                                 Margin="0,0,0,15"/>
+                        
+                        <!-- Is Active -->
+                        <CheckBox Content="Aktif" 
+                                  IsChecked="{Binding IsActive}"
+                                  FontWeight="SemiBold"
+                                  Foreground="#333333"/>
+                    </StackPanel>
+                </ScrollViewer>
+            </TabItem>
+            <TabItem Header="📒 Hareketler">
+                <Grid Margin="0,10,0,0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <Grid Grid.Row="0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <StackPanel Orientation="Horizontal" Grid.Column="0" VerticalAlignment="Center">
+                            <TextBlock Text="Cari kartına ait tüm hareketler" 
+                                       FontWeight="SemiBold"
+                                       Foreground="#333333"/>
+                            <TextBlock Text="{Binding LedgerStatusMessage}" 
+                                       Margin="10,0,0,0"
+                                       Foreground="#1976D2"
+                                       VerticalAlignment="Center"/>
+                        </StackPanel>
+
+                        <StackPanel Orientation="Horizontal" Grid.Column="1" VerticalAlignment="Center">
+                            <Button Content="📑 Excel'e Aktar"
+                                    Command="{Binding ExportLedgerToExcelCommand}"
+                                    Width="140" Height="32"
+                                    Background="#1976D2" Foreground="White"
+                                    FontWeight="SemiBold"
+                                    BorderThickness="0"
+                                    Cursor="Hand"
+                                    Margin="0,0,10,0">
+                                <Button.Style>
+                                    <Style TargetType="Button">
+                                        <Setter Property="Template">
+                                            <Setter.Value>
+                                                <ControlTemplate TargetType="Button">
+                                                    <Border Background="{TemplateBinding Background}" 
+                                                            CornerRadius="4">
+                                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                    </Border>
+                                                    <ControlTemplate.Triggers>
+                                                        <Trigger Property="IsMouseOver" Value="True">
+                                                            <Setter Property="Background" Value="#1565C0"/>
+                                                        </Trigger>
+                                                        <Trigger Property="IsEnabled" Value="False">
+                                                            <Setter Property="Background" Value="#CCCCCC"/>
+                                                            <Setter Property="Foreground" Value="#888888"/>
+                                                        </Trigger>
+                                                    </ControlTemplate.Triggers>
+                                                </ControlTemplate>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </Style>
+                                </Button.Style>
+                            </Button>
+
+                            <Button Content="📕 PDF'e Aktar"
+                                    Command="{Binding ExportLedgerToPdfCommand}"
+                                    Width="140" Height="32"
+                                    Background="#D32F2F" Foreground="White"
+                                    FontWeight="SemiBold"
+                                    BorderThickness="0"
+                                    Cursor="Hand">
+                                <Button.Style>
+                                    <Style TargetType="Button">
+                                        <Setter Property="Template">
+                                            <Setter.Value>
+                                                <ControlTemplate TargetType="Button">
+                                                    <Border Background="{TemplateBinding Background}" 
+                                                            CornerRadius="4">
+                                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                    </Border>
+                                                    <ControlTemplate.Triggers>
+                                                        <Trigger Property="IsMouseOver" Value="True">
+                                                            <Setter Property="Background" Value="#C62828"/>
+                                                        </Trigger>
+                                                        <Trigger Property="IsEnabled" Value="False">
+                                                            <Setter Property="Background" Value="#CCCCCC"/>
+                                                            <Setter Property="Foreground" Value="#888888"/>
+                                                        </Trigger>
+                                                    </ControlTemplate.Triggers>
+                                                </ControlTemplate>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </Style>
+                                </Button.Style>
+                            </Button>
+                        </StackPanel>
+                    </Grid>
+
+                    <Grid Grid.Row="1" Margin="0,10,0,10">
+                        <DataGrid ItemsSource="{Binding LedgerEntries}"
+                                  AutoGenerateColumns="False"
+                                  IsReadOnly="True"
+                                  HeadersVisibility="Column"
+                                  CanUserAddRows="False"
+                                  CanUserDeleteRows="False"
+                                  RowHeaderWidth="0">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Tarih" Binding="{Binding Date, StringFormat=dd.MM.yyyy}" Width="120"/>
+                                <DataGridTextColumn Header="Belge Tipi" Binding="{Binding DocType}" Width="150"/>
+                                <DataGridTextColumn Header="Belge No" Binding="{Binding DocNumber}" Width="150"/>
+                                <DataGridTextColumn Header="Borç" Binding="{Binding Debit, StringFormat=N2}" Width="120"/>
+                                <DataGridTextColumn Header="Alacak" Binding="{Binding Credit, StringFormat=N2}" Width="120"/>
+                                <DataGridTextColumn Header="Bakiye" Binding="{Binding BalanceAfter, StringFormat=N2}" Width="*"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+
+                        <Border Background="#AAFFFFFF"
+                                Visibility="{Binding IsLedgerLoading, Converter={StaticResource BoolToVis}}">
+                            <TextBlock Text="Hareketler yükleniyor..."
+                                       FontWeight="SemiBold"
+                                       Foreground="#333333"
+                                       HorizontalAlignment="Center"
+                                       VerticalAlignment="Center"/>
+                        </Border>
+                    </Grid>
+
+                    <TextBlock Grid.Row="2"
+                               Text="{Binding LedgerSummary}"
+                               HorizontalAlignment="Right"
+                               FontStyle="Italic"
+                               Foreground="#555555"
+                               Margin="0,0,0,5"/>
+                </Grid>
+            </TabItem>
+        </TabControl>
+        
+        <!-- Required Field Note -->
+        <TextBlock Grid.Row="3" 
+                   Text="* Zorunlu alanlar. VKN veya TCKN'den en az biri doldurulmalıdır."
+                   Foreground="#666666"
+                   FontSize="11"
+                   FontStyle="Italic"
+                   Margin="0,10,0,15"/>
+        
+        <!-- Buttons -->
+        <StackPanel Grid.Row="4" Orientation="Horizontal" HorizontalAlignment="Right">
+            <Button Content="💾 Kaydet" 
+                    Click="SaveButton_Click"
+                    Width="120" Height="40"
+                    Background="#4CAF50" Foreground="White"
+                    FontWeight="SemiBold"
+                    BorderThickness="0"
+                    Cursor="Hand"
+                    Margin="0,0,10,0">
+                <Button.Style>
+                    <Style TargetType="Button">
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="Button">
+                                    <Border Background="{TemplateBinding Background}" 
+                                            CornerRadius="4"
+                                            Padding="15,10">
+                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    </Border>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#45A049"/>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+            </Button>
+            
+            <Button Content="❌ İptal" 
+                    Click="CancelButton_Click"
+                    Width="120" Height="40"
+                    Background="#757575" Foreground="White"
+                    FontWeight="SemiBold"
+                    BorderThickness="0"
+                    Cursor="Hand">
+                <Button.Style>
+                    <Style TargetType="Button">
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="Button">
+                                    <Border Background="{TemplateBinding Background}" 
+                                            CornerRadius="4"
+                                            Padding="15,10">
+                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    </Border>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#616161"/>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+            </Button>
+        </StackPanel>
+    </Grid>
+</Window>

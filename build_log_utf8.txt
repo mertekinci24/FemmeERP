@@ -1,0 +1,21 @@
+﻿  Geri y├╝klenecek projeler belirleniyor...
+  Geri y├╝kleme i├ğin t├╝m projeler g├╝ncel.
+  Domain -> C:\Users\merte\Documents\FemmeERP_Cosmo\Domain\bin\Debug\net8.0\Domain.dll
+  Persistence -> C:\Users\merte\Documents\FemmeERP_Cosmo\Persistence\bin\Debug\net8.0\Persistence.dll
+  Application -> C:\Users\merte\Documents\FemmeERP_Cosmo\Application\bin\Debug\net8.0\Application.dll
+  Infrastructure -> C:\Users\merte\Documents\FemmeERP_Cosmo\Infrastructure\bin\Debug\net8.0\Infrastructure.dll
+C:\Users\merte\Documents\FemmeERP_Cosmo\Presentation\ViewModels\DocumentEditViewModel.cs(261,12): warning CS8618: Null atanamaz ├Âzellik 'AddBarcodeCmd', olu┼şturucudan ├ğ─▒k─▒┼ş yaparken null olmayan bir de─şer i├ğermelidir. 'Gerekli' de─şi┼ştiricisini ekleyin veya ├Âzellik de─şerini null atanabilir olarak bildirmeyi g├Âz ├Ân├╝nde bulundurun. [C:\Users\merte\Documents\FemmeERP_Cosmo\Presentation\Presentation_ozjqlsb5_wpftmp.csproj]
+C:\Users\merte\Documents\FemmeERP_Cosmo\Presentation\Views\DocumentEditDialog.xaml(19,130): error CS1061: 'DocumentEditDialog' bir 'CloseCommand_Executed' tan─▒m─▒ i├ğermiyor ve 'DocumentEditDialog' t├╝r├╝nde bir ilk ba─ş─▒ms─▒z de─şi┼şken kabul eden hi├ğbir eri┼şilebilir 'CloseCommand_Executed' geni┼şletme y├Ântemi bulunamad─▒ (bir kullanma y├Ânergeniz veya derleme ba┼şvurunuz eksik olabilir mi?) [C:\Users\merte\Documents\FemmeERP_Cosmo\Presentation\Presentation_ozjqlsb5_wpftmp.csproj]
+C:\Users\merte\Documents\FemmeERP_Cosmo\Presentation\Views\DocumentEditDialog.xaml.cs(20,18): warning CS0169: 'DocumentEditDialog._isClosing' alan─▒ hi├ğbir zaman kullan─▒lmaz [C:\Users\merte\Documents\FemmeERP_Cosmo\Presentation\Presentation_ozjqlsb5_wpftmp.csproj]
+C:\Users\merte\Documents\FemmeERP_Cosmo\Presentation\ViewModels\DocumentsViewModel.cs(31,27): warning CS0169: 'DocumentsViewModel._newPurchaseInvCmd' alan─▒ hi├ğbir zaman kullan─▒lmaz [C:\Users\merte\Documents\FemmeERP_Cosmo\Presentation\Presentation_ozjqlsb5_wpftmp.csproj]
+
+Olu┼şturma BA┼ŞARISIZ OLDU.
+
+C:\Users\merte\Documents\FemmeERP_Cosmo\Presentation\ViewModels\DocumentEditViewModel.cs(261,12): warning CS8618: Null atanamaz ├Âzellik 'AddBarcodeCmd', olu┼şturucudan ├ğ─▒k─▒┼ş yaparken null olmayan bir de─şer i├ğermelidir. 'Gerekli' de─şi┼ştiricisini ekleyin veya ├Âzellik de─şerini null atanabilir olarak bildirmeyi g├Âz ├Ân├╝nde bulundurun. [C:\Users\merte\Documents\FemmeERP_Cosmo\Presentation\Presentation_ozjqlsb5_wpftmp.csproj]
+C:\Users\merte\Documents\FemmeERP_Cosmo\Presentation\Views\DocumentEditDialog.xaml.cs(20,18): warning CS0169: 'DocumentEditDialog._isClosing' alan─▒ hi├ğbir zaman kullan─▒lmaz [C:\Users\merte\Documents\FemmeERP_Cosmo\Presentation\Presentation_ozjqlsb5_wpftmp.csproj]
+C:\Users\merte\Documents\FemmeERP_Cosmo\Presentation\ViewModels\DocumentsViewModel.cs(31,27): warning CS0169: 'DocumentsViewModel._newPurchaseInvCmd' alan─▒ hi├ğbir zaman kullan─▒lmaz [C:\Users\merte\Documents\FemmeERP_Cosmo\Presentation\Presentation_ozjqlsb5_wpftmp.csproj]
+C:\Users\merte\Documents\FemmeERP_Cosmo\Presentation\Views\DocumentEditDialog.xaml(19,130): error CS1061: 'DocumentEditDialog' bir 'CloseCommand_Executed' tan─▒m─▒ i├ğermiyor ve 'DocumentEditDialog' t├╝r├╝nde bir ilk ba─ş─▒ms─▒z de─şi┼şken kabul eden hi├ğbir eri┼şilebilir 'CloseCommand_Executed' geni┼şletme y├Ântemi bulunamad─▒ (bir kullanma y├Ânergeniz veya derleme ba┼şvurunuz eksik olabilir mi?) [C:\Users\merte\Documents\FemmeERP_Cosmo\Presentation\Presentation_ozjqlsb5_wpftmp.csproj]
+    3 Uyar─▒
+    1 Hata
+
+Ge├ğen S├╝re 00:00:13.00

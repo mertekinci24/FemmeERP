@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RunSettings>
+  <RunConfiguration>
+    <!-- Global test session timeout to accommodate slower environments (milliseconds) -->
+    <TestSessionTimeout>300000</TestSessionTimeout>
+    <ResultsDirectory>TestResults</ResultsDirectory>
+  </RunConfiguration>
+</RunSettings>
+

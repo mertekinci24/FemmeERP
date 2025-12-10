@@ -1,0 +1,53 @@
+﻿<UserControl x:Class="InventoryERP.Presentation.Views.WarehouseManagementView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <DockPanel Margin="16">
+        <!-- R-040: Warehouse & Location Management (R-013, R-034) -->
+        <TextBlock DockPanel.Dock="Top" Text="Depo ve Lokasyon Yönetimi" FontSize="16" FontWeight="SemiBold" Margin="0,0,0,16"/>
+        
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="2*"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Left: Warehouses -->
+            <DockPanel Grid.Column="0" Margin="0,0,8,0">
+                <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="0,0,0,8">
+                    <Button Content="Yeni Depo" Command="{Binding NewWarehouseCmd}" Width="120" Margin="0,0,8,0"/>
+                    <Button Content="Düzenle" Command="{Binding EditWarehouseCmd}" Width="100" Margin="0,0,8,0"/>
+                    <Button Content="Sil" Command="{Binding DeleteWarehouseCmd}" Width="80" Margin="0,0,8,0"/>
+                    <Button Content="Yenile" Command="{Binding RefreshCmd}" Width="100"/>
+                </StackPanel>
+                
+                <TextBlock DockPanel.Dock="Top" Text="Depolar" FontWeight="SemiBold" Margin="0,0,0,4"/>
+                <DataGrid ItemsSource="{Binding Warehouses}" AutoGenerateColumns="False"
+                          SelectedItem="{Binding SelectedWarehouse}"
+                          CanUserAddRows="False" CanUserDeleteRows="False" IsReadOnly="True">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Kod" Binding="{Binding Code}" Width="80"/>
+                        <DataGridTextColumn Header="Ad" Binding="{Binding Name}" Width="*"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </DockPanel>
+
+            <!-- Right: Locations for selected Warehouse -->
+            <DockPanel Grid.Column="1" Margin="8,0,0,0">
+                <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="0,0,0,8">
+                    <Button Content="Yeni Lokasyon" Command="{Binding NewLocationCmd}" Width="140" Margin="0,0,8,0"/>
+                    <TextBlock Text="{Binding SelectedWarehouse.Name, StringFormat='Depo: {0}'}" 
+                               VerticalAlignment="Center" FontWeight="SemiBold" Margin="8,0,0,0"/>
+                </StackPanel>
+                
+                <TextBlock DockPanel.Dock="Top" Text="Lokasyonlar (Raf/Göz)" FontWeight="SemiBold" Margin="0,0,0,4"/>
+                <DataGrid ItemsSource="{Binding Locations}" AutoGenerateColumns="False"
+                          CanUserAddRows="False" CanUserDeleteRows="False" IsReadOnly="True">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Kod" Binding="{Binding Code}" Width="120"/>
+                        <DataGridTextColumn Header="Ad" Binding="{Binding Name}" Width="*"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </DockPanel>
+        </Grid>
+    </DockPanel>
+</UserControl>

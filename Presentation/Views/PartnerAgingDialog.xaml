@@ -1,0 +1,25 @@
+﻿<Window x:Class="InventoryERP.Presentation.Views.PartnerAgingDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="YaÅŸlandÄ±rma" Height="300" Width="500">
+    <Grid Margin="8">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <StackPanel Orientation="Horizontal" Grid.Row="0" Margin="0,0,0,8">
+            <TextBlock Text="As Of" VerticalAlignment="Center" Margin="0,0,8,0"/>
+            <DatePicker x:Name="AsOfDate" Width="140"/>
+            <Button x:Name="RefreshBtn" Content="Yenile" Margin="8,0,0,0"/>
+            <Button x:Name="ExcelBtn" Content="Excel" Margin="8,0,0,0"/>
+        </StackPanel>
+
+        <DataGrid x:Name="Grid" Grid.Row="1" AutoGenerateColumns="False" IsReadOnly="True">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Bucket" Binding="{Binding Bucket}" />
+                <DataGridTextColumn Header="Tutar" Binding="{Binding AmountTry}" />
+            </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
+</Window>

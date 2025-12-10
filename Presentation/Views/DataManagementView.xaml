@@ -1,0 +1,24 @@
+﻿<UserControl x:Class="InventoryERP.Presentation.Views.DataManagementView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <UserControl.Resources>
+    <ResourceDictionary>
+      <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="/InventoryERP.Presentation;component/Resources/Theme.xaml" />
+      </ResourceDictionary.MergedDictionaries>
+    </ResourceDictionary>
+  </UserControl.Resources>
+  <Grid Background="Transparent">
+    <StackPanel Margin="16">
+      <TextBlock Text="Veri YÃ¶netimi" FontSize="24" FontWeight="Bold" />
+      <TextBlock Text="Master data ve iÅŸlem verileri iÃ§in iÃ§e/dÄ±ÅŸa aktarma operasyonlarÄ±" Margin="0,8,0,16" Opacity="0.8"/>
+      <WrapPanel>
+        <Button Content="ÃœrÃ¼nleri Ä°Ã§e Aktar (CSV)" Command="{Binding ImportProductsCsvCmd}" Width="240" Height="36" Margin="0,0,8,8" Style="{StaticResource AppPrimaryButton}" ToolTip="Kolonlar: Sku,Name,BaseUom,VatRate,Active (bkz. docs/VALIDATION_RULES.md)" />
+        <Button Content="Stok AÃ§Ä±lÄ±ÅŸÄ±nÄ± Ä°Ã§e Aktar (CSV)" Command="{Binding ImportOpeningStockCsvCmd}" Width="260" Height="36" Margin="0,0,8,8" Style="{StaticResource AppFlatButton}" ToolTip="Kolonlar: Sku,Qty,Warehouse,Location,Cost (bkz. docs/VALIDATION_RULES.md)" />
+        <Button Content="Carileri Ä°Ã§e Aktar" Command="{Binding ImportPartnersCmd}" Width="190" Height="36" Margin="0,0,8,8" IsEnabled="False" ToolTip="TODO: Partner import"/>
+        <Button Content="ÃœrÃ¼nleri DÄ±ÅŸa Aktar" Command="{Binding ExportProductsCmd}" Width="190" Height="36" Margin="0,0,8,8" IsEnabled="False" ToolTip="TODO: Export"/>
+        <Button Content="Veri TemizliÄŸi (Placeholder)" Width="210" Height="36" Margin="0,0,8,8" IsEnabled="False" />
+      </WrapPanel>
+    </StackPanel>
+  </Grid>
+</UserControl>

@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<UserControl x:Class="InventoryERP.Presentation.Views.DocumentsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:sys="clr-namespace:System;assembly=mscorlib">
+  <DockPanel Margin="8">
+    <!-- Page Title -->
+    <TextBlock DockPanel.Dock="Top" Text="{Binding DisplayTitle}" FontSize="18" FontWeight="Bold" Margin="0,0,0,8"/>
+    <!-- Üst çubuk -->
+    <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="0,0,0,0">
+      <!-- Actions menu -->
+      <Menu VerticalAlignment="Center">
+        <MenuItem Header="Yeni Belge ▼" Padding="8,4">
+          <MenuItem Header="Yeni Satış Faturası" Command="{Binding NewInvoiceCommand}"/>
+          <MenuItem Header="Yeni Tahsilat Fişi" Command="{Binding NewCashReceiptCommand}"/>
+          <MenuItem Header="Yeni Transfer Fişi" Command="{Binding NewTransferCommand}"/>
+          <Separator/>
+          <MenuItem Header="Yeni Üretim Fişi (TODO)" IsEnabled="False"/>
+        </MenuItem>
+      </Menu>
+      <Button Content="İrsaliyeye Çevir" Command="{Binding ConvertToDispatchCommand}" Margin="6,0,0,0"
+              IsEnabled="{Binding CanConvertSelected}"/>
+      <Button Content="Faturaya Çevir" Command="{Binding ConvertToInvoiceCommand}" Margin="6,0,0,0"
+              IsEnabled="{Binding CanConvertToInvoiceSelected}"/>
+      <Button Content="Yenile" Command="{Binding RefreshCommand}"/>
+      <Button Content="Bugün" Command="{Binding QuickTodayCmd}" Margin="6,0,0,0"/>
+      <Button Content="7 Gün" Command="{Binding Quick7Cmd}" Margin="6,0,0,0"/>
+      <Button Content="30 Gün" Command="{Binding Quick30Cmd}" Margin="6,0,0,0"/>
+      <Button Content="Maliyet Dağıtımı" Command="{Binding LandedCostCmd}" Margin="12,0,0,0"/>
+      <Button Content="PDF Oluştur (Test)" Command="{Binding ReportTestCmd}" Margin="6,0,0,0"/>
+      <Button Content="E-Fatura Gönder (Mock)" Command="{Binding SendEInvoiceCmd}" Margin="6,0,0,0"/>
+      <TextBox Width="220" Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" />
+      <DatePicker SelectedDate="{Binding DateFrom}" />
+      <DatePicker SelectedDate="{Binding DateTo}" />
+      <TextBlock Text="{Binding RowCount, StringFormat='{}{0} kayıt'}" Margin="8,0,0,0"/>
+    </StackPanel>
+
+    <!-- Active filters preview -->
+    <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="0,6,0,0">
+      <TextBlock Text="Aktif Filtreler:" FontWeight="Bold" VerticalAlignment="Center"/>
+      <TextBlock Text=" " Width="6"/>
+      <TextBlock Text="{Binding ActiveFiltersPreview}" VerticalAlignment="Center"/>
+      <Button Content="Panoya kopyala" Command="{Binding CopyFiltersCmd}" Margin="8,0,0,0"/>
+    </StackPanel>
+
+    <!-- Liste -->
+    <DataGrid ItemsSource="{Binding Rows}" SelectedItem="{Binding Selected}"
+              AutoGenerateColumns="False" CanUserAddRows="False"
+              IsReadOnly="True" EnableRowVirtualization="True" Margin="0,8,0,0"
+              MouseDoubleClick="DataGrid_MouseDoubleClick">
+      <DataGrid.ContextMenu>
+        <ContextMenu>
+          <MenuItem Header="Düzenle" Command="{Binding PlacementTarget.DataContext.EditCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"/>
+          <MenuItem Header="Sil" Command="{Binding PlacementTarget.DataContext.DeleteCmd, RelativeSource={RelativeSource AncestorType=ContextMenu}}"/>
+          <MenuItem Header="Onayla" Command="{Binding PlacementTarget.DataContext.ApproveCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"/>
+          <MenuItem Header="İptal" Command="{Binding PlacementTarget.DataContext.CancelCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"/>
+          <Separator/>
+          <MenuItem Header="Yazdır (PDF)" Command="{Binding PlacementTarget.DataContext.PrintCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"/>
+        </ContextMenu>
+      </DataGrid.ContextMenu>
+      <DataGrid.Columns>
+        <DataGridTextColumn Header="No" Binding="{Binding Number}" Width="120"/>
+        <DataGridTextColumn Header="Tür" Binding="{Binding Type}" Width="110"/>
+        <DataGridTextColumn Header="Tarih" Binding="{Binding Date, StringFormat='{}{0:yyyy-MM-dd}'}" Width="100"/>
+        <DataGridTextColumn Header="Cari" Binding="{Binding Partner}" Width="*"/>
+        <DataGridTextColumn Header="Ambar" Binding="{Binding WarehouseName}" Width="100"/>
+        <DataGridTextColumn Header="Not" Binding="{Binding Description}" Width="150"/>
+        <DataGridTextColumn Header="Durum" Binding="{Binding Status}" Width="90"/>
+        <DataGridTextColumn Header="Net" Binding="{Binding NetTry, StringFormat='{}{0:N2}'}" Width="100"/>
+        <DataGridTextColumn Header="KDV" Binding="{Binding VatTry, StringFormat='{}{0:N2}'}" Width="80"/>
+        <DataGridTextColumn Header="Brüt" Binding="{Binding GrossTry, StringFormat='{}{0:N2}'}" Width="100"/>
+      </DataGrid.Columns>
+    </DataGrid>
+
+    <!-- Pager -->
+    <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,8,0,0">
+      <Button Content="&lt;&lt;" Command="{Binding PrevPageCmd}" />
+      <Button Content="&lt;" Command="{Binding PrevPageCmd}" Margin="4,0,0,0"/>
+      <TextBlock Text="" Width="8"/>
+      <TextBlock Text="Sayfa:" VerticalAlignment="Center" Margin="8,0,0,0"/>
+      <TextBlock Text="{Binding Page}" FontWeight="Bold" VerticalAlignment="Center" Margin="4,0,0,0"/>
+      <TextBlock Text="/" VerticalAlignment="Center" Margin="2,0,0,0"/>
+      <TextBlock Text="{Binding TotalPages}" VerticalAlignment="Center" Margin="2,0,0,0"/>
+      <TextBlock Text="" Width="8"/>
+      <Button Content=">" Command="{Binding NextPageCmd}" Margin="8,0,0,0"/>
+      <Button Content=">>" Command="{Binding NextPageCmd}" Margin="4,0,0,0"/>
+      <TextBlock Text="" Width="18"/>
+      <TextBlock Text="Sayfa boyutu:" VerticalAlignment="Center" Margin="8,0,0,0"/>
+      <ComboBox SelectedValue="{Binding PageSize}" Width="80" Margin="4,0,0,0">
+        <sys:Int32>10</sys:Int32>
+        <sys:Int32>20</sys:Int32>
+        <sys:Int32>50</sys:Int32>
+      </ComboBox>
+    </StackPanel>
+  </DockPanel>
+</UserControl>
+

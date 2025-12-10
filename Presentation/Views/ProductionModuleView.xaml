@@ -1,0 +1,29 @@
+﻿<UserControl x:Class="InventoryERP.Presentation.Views.ProductionModuleView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <!-- R-045: Production (MRP) Module with Tabs -->
+  <DockPanel>
+    <TabControl>
+      <TabItem Header="ğŸ­ Ãœretim FiÅŸleri">
+        <StackPanel Margin="16">
+          <TextBlock Text="Ãœretim FiÅŸleri (TODO - R-014)" FontSize="14" Opacity="0.6" Margin="0,0,0,8"/>
+          <TextBlock Text="Ãœretim emirleri, hammadde tÃ¼ketimi ve mamul Ã§Ä±kÄ±ÅŸÄ± iÅŸlemlerinin yÃ¶netildiÄŸi ekran." 
+                     TextWrapping="Wrap" Opacity="0.5"/>
+        </StackPanel>
+      </TabItem>
+      <TabItem Header="ğŸ“ ÃœrÃ¼n ReÃ§eteleri (BOM)">
+        <StackPanel Margin="16">
+          <TextBlock Text="ÃœrÃ¼n ReÃ§eteleri - BOM (TODO)" FontSize="14" Opacity="0.6" Margin="0,0,0,8"/>
+          <TextBlock Text="Bill of Materials: Mamul Ã¼rÃ¼nlerin hangi hammaddelerden oluÅŸtuÄŸunu tanÄ±mlayan reÃ§ete kartlarÄ±." 
+                     TextWrapping="Wrap" Opacity="0.5"/>
+        </StackPanel>
+      </TabItem>
+      <TabItem Header="ğŸ§© Varyant TanÄ±mlarÄ±">
+        <StackPanel Margin="16">
+          <TextBlock Text="Varyant TanÄ±mlarÄ± (TODO)" FontSize="14" Opacity="0.6" Margin="0,0,0,8"/>
+          <TextBlock Text="ÃœrÃ¼n varyant kodlarÄ± ve tanÄ±mlarÄ±nÄ±n yÃ¶netildiÄŸi alan." TextWrapping="Wrap" Opacity="0.5"/>
+        </StackPanel>
+      </TabItem>
+    </TabControl>
+  </DockPanel>
+</UserControl>

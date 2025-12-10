@@ -1,0 +1,71 @@
+<Window x:Class="InventoryERP.Presentation.Views.CashAccountEditDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Title="Kasa / Banka Hesabi"
+        Height="420"
+        Width="520"
+        WindowStartupLocation="CenterOwner"
+        ResizeMode="NoResize">
+    <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVis"/>
+    </Window.Resources>
+
+    <Grid Margin="16">
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <ScrollViewer Grid.Row="0" VerticalScrollBarVisibility="Auto" Margin="0,0,0,12">
+            <StackPanel VerticalAlignment="Top">
+                <TextBlock Text="Hesap Turu" FontWeight="SemiBold"/>
+                <StackPanel Orientation="Horizontal" Margin="0,4,0,12">
+                    <RadioButton Content="Kasa"
+                                 GroupName="AccountType"
+                                 IsChecked="{Binding IsCash, Mode=TwoWay}"/>
+                    <RadioButton Content="Banka"
+                                 GroupName="AccountType"
+                                 Margin="12,0,0,0"
+                                 IsChecked="{Binding BankSelected, Mode=TwoWay}"/>
+                </StackPanel>
+
+                <TextBlock Text="Hesap Adi" FontWeight="SemiBold"/>
+                <TextBox Margin="0,4,0,12" Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}"/>
+
+                <TextBlock Text="Doviz" FontWeight="SemiBold"/>
+                <ComboBox Margin="0,4,0,12"
+                          ItemsSource="{Binding Currencies}"
+                          SelectedItem="{Binding Currency}"/>
+
+                <StackPanel Visibility="{Binding IsBank, Converter={StaticResource BoolToVis}}">
+                    <TextBlock Text="Banka Adi" FontWeight="SemiBold"/>
+                    <TextBox Margin="0,4,0,12" Text="{Binding BankName, UpdateSourceTrigger=PropertyChanged}"/>
+
+                    <TextBlock Text="Sube" FontWeight="SemiBold"/>
+                    <TextBox Margin="0,4,0,12" Text="{Binding BankBranch, UpdateSourceTrigger=PropertyChanged}"/>
+
+                    <TextBlock Text="Hesap No" FontWeight="SemiBold"/>
+                    <TextBox Margin="0,4,0,12" Text="{Binding AccountNumber, UpdateSourceTrigger=PropertyChanged}"/>
+
+                    <TextBlock Text="IBAN" FontWeight="SemiBold"/>
+                    <TextBox Margin="0,4,0,12" Text="{Binding Iban, UpdateSourceTrigger=PropertyChanged}"/>
+
+                    <TextBlock Text="Swift Kodu" FontWeight="SemiBold"/>
+                    <TextBox Margin="0,4,0,12" Text="{Binding SwiftCode, UpdateSourceTrigger=PropertyChanged}"/>
+                </StackPanel>
+
+                <TextBlock Text="Aciklama" FontWeight="SemiBold"/>
+                <TextBox Margin="0,4,0,0" Height="60" AcceptsReturn="True" TextWrapping="Wrap"
+                         Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}"/>
+            </StackPanel>
+        </ScrollViewer>
+
+        <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right">
+            <Button Content="Kaydet" Width="90" Margin="0,0,8,0" Click="Save_Click"/>
+            <Button Content="Iptal" Width="90" Click="Cancel_Click"/>
+        </StackPanel>
+    </Grid>
+</Window>

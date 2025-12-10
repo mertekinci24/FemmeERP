@@ -1,0 +1,8 @@
+﻿[2025-12-08 02:02:38.327 INF] ====== InventoryERP Application Started (v1.0.18_DIAGNOSTIC) ======
+[2025-12-08 02:02:43.261 INF] No pending migrations. Database is up-to-date.
+[2025-12-08 02:02:43.287 INF] Database migration completed successfully.
+[2025-12-08 02:02:43.294 INF] Applied migrations (12): 20251104184843_InitialMigration, 20251104212859_Add_Product_Category, 20251106040847_R049_AdjustmentDocumentTypes, 20251107040355_AddPricesTable, 20251109221258_R086_PartnerCrudEnhancement, 20251116222803_R131_CashLedger, 20251117034202_R172_AddProductBarcode, 20251122120000_AddSwiftCode, 20251122160000_AddWmsFields, 20251127100000_AddSequences, 20251201120000_MakeLedgerDocIdOptional, 20251202111152_AddDescriptionToPartnerLedgerEntry
+[2025-12-08 02:02:43.300 INF] Pending migrations after migrate (0): 
+[2025-12-08 02:02:43.303 INF] DB ConnectionString: Data Source=C:\Users\merte\AppData\Local\InventoryERP\inventory.db
+[2025-12-08 02:02:43.304 INF] Attached DB 0:main => C:\Users\merte\AppData\Local\InventoryERP\inventory.db
+[2025-12-08 02:02:43.307 INF] Partner columns: Id(INTEGER), PartnerType(TEXT), Name(TEXT), Phone(TEXT), CreditLimitTry(TEXT), PaymentTermDays(INTEGER), CreatedAt(TEXT), ModifiedAt(TEXT), Version(INTEGER), CreatedBy(TEXT), ModifiedBy(TEXT), IsDeleted(INTEGER), DeletedAt(TEXT), Address(TEXT), Email(TEXT), IsActive(INTEGER), NationalId(TEXT), TaxId(TEXT)

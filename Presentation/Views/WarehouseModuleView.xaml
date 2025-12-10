@@ -1,0 +1,17 @@
+﻿<UserControl x:Class="InventoryERP.Presentation.Views.WarehouseModuleView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" 
+             d:DesignHeight="600" d:DesignWidth="900">
+    <!-- R-044.2: Warehouse Module - Depo Hareketleri ve Lokasyon YÃ¶netimi -->
+    <TabControl>
+        <TabItem Header="ğŸ“¦ Depo Hareketleri">
+            <ContentControl Content="{Binding DocumentsView}"/>
+        </TabItem>
+        <TabItem Header="ğŸ¢ Depo ve Lokasyonlar">
+            <ContentControl Content="{Binding WarehouseCardsView}"/>
+        </TabItem>
+    </TabControl>
+</UserControl>

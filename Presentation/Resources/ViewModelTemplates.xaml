@@ -1,0 +1,33 @@
+﻿<ResourceDictionary
+  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+  xmlns:vm="clr-namespace:InventoryERP.Presentation.ViewModels"
+  xmlns:views="clr-namespace:InventoryERP.Presentation.Views">
+  <!-- R-044.1: Separate Accounting and Finance Module ViewModels -->
+  <DataTemplate DataType="{x:Type vm:AccountingModuleViewModel}">
+    <views:AccountingModuleView/>
+  </DataTemplate>
+  <DataTemplate DataType="{x:Type vm:FinanceModuleViewModel}">
+    <views:FinanceModuleView/>
+  </DataTemplate>
+  
+  <!-- R-044.2: Separate Stock Management and Warehouse Module ViewModels -->
+  <DataTemplate DataType="{x:Type vm:StockManagementModuleViewModel}">
+    <views:StockManagementModuleView/>
+  </DataTemplate>
+  <DataTemplate DataType="{x:Type vm:WarehouseModuleViewModel}">
+    <views:WarehouseModuleView/>
+  </DataTemplate>
+  
+  <DataTemplate DataType="{x:Type vm:ProductionModuleViewModel}">
+    <views:ProductionModuleView/>
+  </DataTemplate>
+  
+  <!-- Legacy ViewModels (still used by modules) -->
+  <DataTemplate DataType="{x:Type vm:DocumentsViewModel}">
+    <views:DocumentsView/>
+  </DataTemplate>
+  <DataTemplate DataType="{x:Type vm:PartnersViewModel}">
+    <views:PartnersView/>
+  </DataTemplate>
+</ResourceDictionary>

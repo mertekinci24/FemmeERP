@@ -1,0 +1,90 @@
+<Window x:Class="InventoryERP.Presentation.ShellWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="InventoryERP"
+        Height="720"
+        Width="1200">
+  <Grid>
+    <Grid.ColumnDefinitions>
+      <ColumnDefinition Width="280" />
+      <ColumnDefinition Width="*" />
+    </Grid.ColumnDefinitions>
+
+    <!-- Left navigation menu -->
+    <Border Background="#FFFDFDFE"
+            BorderBrush="{StaticResource BorderBrushColor}"
+            BorderThickness="0,0,1,0"
+            Padding="16">
+      <StackPanel>
+        <StackPanel Orientation="Horizontal" Margin="0,0,0,12">
+          <StackPanel>
+            <TextBlock Text="InventoryERP" Style="{StaticResource AppNavTitleText}" />
+            <TextBlock Text="UAT / Masaüstü" Style="{StaticResource AppNavSubtitleText}" />
+          </StackPanel>
+        </StackPanel>
+
+        <Button Content="Dashboard"
+                Command="{Binding NavigateDashboard}"
+                Style="{StaticResource AppNavButton}" />
+
+        <TextBlock Text="SATIŞ YÖNETİMİ" Style="{StaticResource AppSectionHeaderText}" />
+        <Button Content="Satış Siparişleri"
+                Command="{Binding MapsSalesOrders}"
+                Style="{StaticResource AppNavButton}" />
+        <Button Content="Satış Faturaları"
+                Command="{Binding MapsSalesInvoices}"
+                Style="{StaticResource AppNavButton}" />
+        <Button Content="Cari Hesaplar"
+                Command="{Binding MapsPartners}"
+                Style="{StaticResource AppNavButton}" />
+
+        <TextBlock Text="STOK &amp; DEPO" Style="{StaticResource AppSectionHeaderText}" />
+        <Button Content="Sevk İrsaliyeleri"
+                Command="{Binding MapsDispatches}"
+                Style="{StaticResource AppNavButton}" />
+        <Button Content="Stok Kartları"
+                Command="{Binding MapsStockCards}"
+                Style="{StaticResource AppNavButton}" />
+        <Button Content="Stok Hareketleri"
+                Command="{Binding MapsStockMovements}"
+                Style="{StaticResource AppNavButton}" />
+        <Button Content="Depo &amp; Lokasyon"
+                Command="{Binding MapsWarehouses}"
+                Style="{StaticResource AppNavButton}" />
+
+        <TextBlock Text="FİNANS YÖNETİMİ" Style="{StaticResource AppSectionHeaderText}" />
+        <Button Content="Kasa &amp; Banka"
+                Command="{Binding MapsCashBank}"
+                Style="{StaticResource AppNavButton}" />
+        <Button Content="Alış Faturaları"
+                Command="{Binding MapsPurchaseInvoices}"
+                Style="{StaticResource AppNavButton}" />
+
+        <TextBlock Text="RAPORLAR" Style="{StaticResource AppSectionHeaderText}" />
+        <Button Content="Raporlar"
+                Command="{Binding MapsReports}"
+                Style="{StaticResource AppNavButton}" />
+
+        <Separator Margin="0,16,0,12" />
+        <Button Content="Tema Değiştir"
+                Command="{Binding ToggleTheme}"
+                Style="{StaticResource AppFlatButton}"
+                HorizontalContentAlignment="Left"
+                Padding="12,8" />
+      </StackPanel>
+    </Border>
+
+    <!-- Content -->
+    <DockPanel Grid.Column="1" Margin="16">
+      <!-- Contextual action bar -->
+      <StackPanel Orientation="Horizontal" DockPanel.Dock="Top" HorizontalAlignment="Right" Margin="0,0,0,8">
+        <Button Content="Yeni" Command="{Binding NewCmd}" Style="{StaticResource AppToolbarButton}" />
+        <Button Content="Dışa Aktar" Command="{Binding ExportCmd}" Style="{StaticResource AppToolbarButton}" />
+        <Button Content="Filtre Önizlemesi" Command="{Binding FiltersPreviewCmd}" Style="{StaticResource AppToolbarButton}" />
+        <Button Content="Diagnose DB" Command="{Binding DiagnoseDbCmd}" Style="{StaticResource AppToolbarButton}" ToolTip="Veritabanı yolu, migration ve şema teşhisi" />
+      </StackPanel>
+
+      <ContentControl Content="{Binding CurrentView}" />
+    </DockPanel>
+  </Grid>
+</Window>

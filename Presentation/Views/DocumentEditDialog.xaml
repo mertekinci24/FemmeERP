@@ -1,0 +1,167 @@
+﻿<Window x:Class="InventoryERP.Presentation.Views.DocumentEditDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:InventoryERP.Presentation.Views"
+        xmlns:converters="clr-namespace:InventoryERP.Presentation.Converters"
+        xmlns:controls="clr-namespace:InventoryERP.Presentation.Controls;assembly=InventoryERP.Presentation"
+        mc:Ignorable="d"
+        Title="{Binding DocumentTitle}" Height="700" Width="1100"
+        WindowStartupLocation="CenterOwner">
+
+    <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVis"/>
+        <converters:InverseBooleanToVisibilityConverter x:Key="InverseBoolToVis"/>
+        <!-- R-210: BindingProxy to allow DataGrid columns (not in Visual Tree) to bind to Window's DataContext -->
+        <converters:BindingProxy x:Key="Proxy" Data="{Binding}"/>
+    </Window.Resources>
+
+    <Window.CommandBindings>
+        <CommandBinding Command="{x:Static local:DocumentEditDialog.CloseCommand}" Executed="CloseCommand_Executed"/>
+    </Window.CommandBindings>
+
+    <Window.InputBindings>
+        <KeyBinding Key="Escape" Command="{x:Static local:DocumentEditDialog.CloseCommand}"/>
+    </Window.InputBindings>
+
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/> <!-- Header -->
+            <RowDefinition Height="*"/>    <!-- Lines -->
+            <RowDefinition Height="Auto"/> <!-- Footer -->
+        </Grid.RowDefinitions>
+
+        <!-- Header Section -->
+        <Border Grid.Row="0" BorderBrush="#DDDDDD" BorderThickness="1" CornerRadius="4" Padding="10" Margin="0,0,0,10" Background="#F9F9F9">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <!-- Row 0 -->
+                <Label Grid.Row="0" Grid.Column="0" Content="Belge No:" FontWeight="SemiBold"/>
+                <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding DocumentNumber}" IsReadOnly="True" Margin="0,0,10,5"/>
+
+                <Label Grid.Row="0" Grid.Column="2" Content="Tarih:" FontWeight="SemiBold"/>
+                <DatePicker Grid.Row="0" Grid.Column="3" SelectedDate="{Binding Date}" Margin="0,0,10,5"/>
+
+                <Label Grid.Row="0" Grid.Column="4" Content="Cari:" FontWeight="SemiBold"/>
+                <ComboBox Grid.Row="0" Grid.Column="5" ItemsSource="{Binding Partners}" 
+                          SelectedValue="{Binding PartnerId}" SelectedValuePath="Id" DisplayMemberPath="Name" Margin="0,0,0,5"/>
+
+                <!-- Row 1 -->
+                <Label Grid.Row="1" Grid.Column="0" Content="Açıklama:" FontWeight="SemiBold"/>
+                <TextBox Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="3" Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,10,0"/>
+                
+                <!-- R-247: Ambar selection for non-transfer documents -->
+                <Label Grid.Row="1" Grid.Column="4" Content="Ambar:" FontWeight="SemiBold" 
+                       Visibility="{Binding IsTransfer, Converter={StaticResource InverseBoolToVis}}"/>
+                <ComboBox Grid.Row="1" Grid.Column="5" ItemsSource="{Binding Warehouses}" 
+                          SelectedValue="{Binding WarehouseId}" SelectedValuePath="Id" DisplayMemberPath="Name" 
+                          Visibility="{Binding IsTransfer, Converter={StaticResource InverseBoolToVis}}" Margin="0,0,0,5"/>
+
+                <!-- Source/Dest Warehouse (Visible only for Transfer) -->
+                <StackPanel Grid.Row="1" Grid.Column="4" Grid.ColumnSpan="2" Orientation="Horizontal" 
+                            Visibility="{Binding IsTransfer, Converter={StaticResource BoolToVis}}">
+                    <Label Content="Kaynak:" FontWeight="SemiBold"/>
+                    <ComboBox ItemsSource="{Binding Warehouses}" SelectedValue="{Binding SourceWarehouseId}" 
+                              SelectedValuePath="Id" DisplayMemberPath="Name" Width="120" Margin="0,0,10,0"/>
+                    
+                    <Label Content="Hedef:" FontWeight="SemiBold"/>
+                    <ComboBox ItemsSource="{Binding Warehouses}" SelectedValue="{Binding DestinationWarehouseId}" 
+                              SelectedValuePath="Id" DisplayMemberPath="Name" Width="120"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <!-- Lines Section -->
+        <DataGrid Grid.Row="1" x:Name="LinesGrid" ItemsSource="{Binding Lines}" AutoGenerateColumns="False" CanUserAddRows="False" Margin="0,0,0,10">
+            <DataGrid.Columns>
+                <!-- R-232: Product Selection ComboBox -->
+                <DataGridTemplateColumn Header="Ürün Seç" Width="200">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <ComboBox ItemsSource="{Binding DataContext.Products, RelativeSource={RelativeSource AncestorType=Window}}"
+                                      DisplayMemberPath="Name"
+                                      SelectedValuePath="Id"
+                                      SelectedValue="{Binding ItemId, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                      IsEditable="True"
+                                      IsTextSearchEnabled="True"
+                                      ToolTip="Ürün seçin veya arayın"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                
+                <!-- Ürün Adı - Read-only, auto-filled -->
+                <DataGridTextColumn Header="Ürün Adı" Binding="{Binding ItemName}" Width="*" IsReadOnly="True"/>
+                
+                <!-- R-238: Fixed binding from Quantity to Qty -->
+                <DataGridTemplateColumn Header="Miktar" Width="100">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBox Text="{Binding Qty, UpdateSourceTrigger=PropertyChanged}"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+
+                <DataGridTextColumn Header="Birim" Binding="{Binding Uom}" Width="60" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Fiyat" Binding="{Binding UnitPrice, UpdateSourceTrigger=PropertyChanged, StringFormat='N2'}" Width="80"/>
+                
+                <!-- R-236: VAT and Discount columns -->
+                <DataGridTextColumn Header="KDV %" Binding="{Binding VatRate, UpdateSourceTrigger=PropertyChanged}" Width="60"/>
+                <DataGridTextColumn Header="İskonto" Binding="{Binding DiscountAmount, UpdateSourceTrigger=PropertyChanged, StringFormat='N2'}" Width="80"/>
+                
+                <DataGridTextColumn Header="Tutar" Binding="{Binding LineTotal, StringFormat='N2'}" Width="100" IsReadOnly="True"/>
+
+                <!-- R-231: Location Columns - Visible ONLY for Transfer -->
+                <DataGridTemplateColumn Header="Kaynak Lokasyon" Width="120" 
+                                        Visibility="{Binding Data.IsTransfer, Source={StaticResource Proxy}, Converter={StaticResource BoolToVis}}">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <ComboBox ItemsSource="{Binding AvailableLocations}" 
+                                      SelectedValue="{Binding SourceLocationId}" 
+                                      SelectedValuePath="Id" DisplayMemberPath="Code"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+
+                <DataGridTemplateColumn Header="Hedef Lokasyon" Width="120"
+                                        Visibility="{Binding Data.IsTransfer, Source={StaticResource Proxy}, Converter={StaticResource BoolToVis}}">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <ComboBox ItemsSource="{Binding AvailableLocations}" 
+                                      SelectedValue="{Binding DestinationLocationId}" 
+                                      SelectedValuePath="Id" DisplayMemberPath="Code"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+
+                <DataGridTemplateColumn Header="İşlem" Width="60">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button Content="Sil" Command="{Binding DataContext.RemoveLineParamCmd, RelativeSource={RelativeSource AncestorType=Window}}" 
+                                    CommandParameter="{Binding}"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <!-- Footer Section -->
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right">
+            <Button Content="Satır Ekle" Command="{Binding AddLineCmd}" Width="100" Margin="0,0,10,0"/>
+            <Button Content="Kaydet" Command="{Binding SaveCommand}" Width="100" Margin="0,0,10,0" IsDefault="True"/>
+            <Button Content="İptal" Command="{x:Static local:DocumentEditDialog.CloseCommand}" Width="100" IsCancel="True"/>
+        </StackPanel>
+    </Grid>
+</Window>

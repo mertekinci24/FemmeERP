@@ -1,0 +1,31 @@
+﻿<UserControl x:Class="InventoryERP.Presentation.Views.FinanceModuleView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <UserControl.Resources>
+    <ResourceDictionary>
+      <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="/InventoryERP.Presentation;component/Resources/Theme.xaml" />
+      </ResourceDictionary.MergedDictionaries>
+    </ResourceDictionary>
+  </UserControl.Resources>
+  <!-- Finans & Muhasebe: Belgeler, Cari, Kasa/Banka -->
+  <DockPanel>
+    <!-- Toolbar for Finance-specific actions -->
+    <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="8,8,8,8">
+      <Button Content="Yeni SatÄ±ÅŸ FaturasÄ±" Command="{Binding NewSalesInvoiceCmd}" Width="180" Height="34" Margin="0,0,8,0" Style="{StaticResource AppPrimaryButton}" ToolTip="Finansal Belgeler sekmesinde yeni satÄ±ÅŸ faturasÄ± oluÅŸtur"/>
+      <Button Content="Yeni Tahsilat FiÅŸi" Command="{Binding NewCashReceiptCmd}" Width="180" Height="34" Margin="0,0,8,0" Style="{StaticResource AppFlatButton}"/>
+      <Button Content="Yeni Ã–deme FiÅŸi" Command="{Binding NewCashPaymentCmd}" Width="180" Height="34" Style="{StaticResource AppFlatButton}"/>
+    </StackPanel>
+    <TabControl>
+      <TabItem Header="Finansal Belgeler">
+        <ContentControl Content="{Binding DocumentsView}"/>
+      </TabItem>
+      <TabItem Header="Cari Hesap KartlarÄ±">
+        <ContentControl Content="{Binding PartnersView}"/>
+      </TabItem>
+      <TabItem Header="Kasa &amp; Banka KartlarÄ±">
+        <ContentControl Content="{Binding CashView}"/>
+      </TabItem>
+    </TabControl>
+  </DockPanel>
+</UserControl>
