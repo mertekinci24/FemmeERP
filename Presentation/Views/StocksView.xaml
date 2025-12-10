@@ -68,13 +68,21 @@
               GridLinesVisibility="Horizontal"
               HeadersVisibility="Column">
       <DataGrid.Resources>
-        <common:BindingProxy x:Key="Proxy" Data="{Binding}" />
-        <converters:FirstLetterConverter x:Key="FirstLetterConverter" />
-        <!-- R-284: Soft Selection to keep data colors visible -->
-        <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="#E0E7FF"/>
-        <SolidColorBrush x:Key="{x:Static SystemColors.HighlightTextBrushKey}" Color="#1F2937"/>
-        <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightBrushKey}" Color="#F3F4F6"/>
-        <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightTextBrushKey}" Color="#374151"/>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <!-- R-299: Excel Filter Styles -->
+                <ResourceDictionary Source="../Resources/DataGridFilterStyles.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+            
+            <common:BindingProxy x:Key="Proxy" Data="{Binding}" />
+            <converters:FirstLetterConverter x:Key="FirstLetterConverter" />
+            
+            <!-- R-284: Soft Selection to keep data colors visible -->
+            <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="#E0E7FF"/>
+            <SolidColorBrush x:Key="{x:Static SystemColors.HighlightTextBrushKey}" Color="#1F2937"/>
+            <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightBrushKey}" Color="#F3F4F6"/>
+            <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightTextBrushKey}" Color="#374151"/>
+        </ResourceDictionary>
       </DataGrid.Resources>
       <DataGrid.RowStyle>
         <Style TargetType="DataGridRow" BasedOn="{StaticResource {x:Type DataGridRow}}">
@@ -127,8 +135,15 @@
           </DataGridTextColumn.ElementStyle>
         </DataGridTextColumn>
         <DataGridTextColumn Header="Barkod" Binding="{Binding Barcode}" Width="110" />
-        <DataGridTextColumn Header="Marka" Binding="{Binding Brand}" Width="90" />
-        <DataGridTextColumn Header="Kategori" Binding="{Binding Category}" Width="100" />
+        <DataGridTextColumn Header="Barkod" Binding="{Binding Barcode}" Width="110" />
+        
+        <!-- R-299: Excel Checkbox Box Filter -->
+        <DataGridTextColumn Header="Marka" Binding="{Binding Brand}" Width="90" 
+                            dgx:DataGridFilterColumn.Template="{StaticResource ExcelFilterTemplate}"/>
+                            
+        <DataGridTextColumn Header="Kategori" Binding="{Binding Category}" Width="100" 
+                            dgx:DataGridFilterColumn.Template="{StaticResource ExcelFilterTemplate}"/>
+                            
         <DataGridTextColumn Header="Ürün Adı" Binding="{Binding Name}" Width="*" />
         <DataGridTextColumn Header="Birim" Binding="{Binding BaseUom}" Width="60" />
         

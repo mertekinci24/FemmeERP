@@ -56,6 +56,10 @@ namespace InventoryERP.Presentation.ViewModels
 
 		private string? _category;
 		public string? Category { get => _category; set => SetProperty(ref _category, value); }
+		
+		// R-289: Brand (Marka) Implementation
+		private string? _brand;
+		public string? Brand { get => _brand; set => SetProperty(ref _brand, value); }
 
 		private string _baseUom = "EA";
 	public string BaseUom 
@@ -118,7 +122,17 @@ namespace InventoryERP.Presentation.ViewModels
 	public decimal CurrentStock 
 	{ 
 		get => _currentStock; 
-		set => SetProperty(ref _currentStock, value); 
+		set 
+		{
+			if (SetProperty(ref _currentStock, value))
+			{
+				// R-292: Sync user input from UI (CurrentStock) to Backend Logic (InitialStock) for new products
+				if (!IsEditMode)
+				{
+					InitialStock = value;
+				}
+			}
+		} 
 	}
 
 	// R-051: Base UOM dropdown options (Turkish-friendly)
@@ -294,6 +308,7 @@ namespace InventoryERP.Presentation.ViewModels
 		Sku = product.Sku;
 		Name = product.Name;
 		Category = product.Category;
+		Brand = product.Brand; // R-289: Load Brand
 		BaseUom = product.BaseUom;
 		Barcode = product.Barcode;
 		VatRate = product.VatRate;
@@ -453,6 +468,7 @@ namespace InventoryERP.Presentation.ViewModels
 				product.Sku = Sku;
 				product.Name = Name;
 				product.Category = Category;
+				product.Brand = Brand; // R-289: Save Brand
 				product.BaseUom = BaseUom;
 				product.VatRate = VatRate;
 				product.Active = Active;
@@ -470,6 +486,7 @@ namespace InventoryERP.Presentation.ViewModels
 					Sku = Sku,
 					Name = Name,
 					Category = Category,
+					Brand = Brand, // R-289: Save Brand
 					BaseUom = BaseUom,
 					VatRate = VatRate,
 					Active = Active,

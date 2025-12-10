@@ -104,7 +104,7 @@ public sealed class InvoicePostingService : IInvoicePostingService
             // Table name is 'Document' (singular) per DocumentConfiguration.cs
             await _db.Database.ExecuteSqlRawAsync(
                 "UPDATE Document SET Status = {0}, ModifiedAt = {1} WHERE Id = {2}",
-                "POSTED",
+                (int)InventoryERP.Domain.Enums.DocumentStatus.POSTED,
                 DateTime.UtcNow,
                 doc.Id);
 

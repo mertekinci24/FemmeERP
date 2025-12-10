@@ -94,8 +94,9 @@ public sealed class DocumentEditViewModel : ViewModelBase, INotifyDataErrorInfo
         "QUOTE",
         "SALES_ORDER",  // R-062/R-161: Sales Order requires partner selection
         "SALES_INVOICE",
-        "PURCHASE_INVOICE"
-        // Dispatch notes (SATIS_IRSALIYE, GELEN_IRSALIYE) may be internal; do not force partner in VM validation
+        "PURCHASE_INVOICE",
+        "SEVK_IRSALIYESI", // Added R-316
+        "GELEN_IRSALIYE"   // Added R-316
     };
     public bool RequiresPartner => PartnerRequiredTypes.Contains(Dto?.Type ?? string.Empty); // Adjustments & operational docs excluded
     
@@ -742,13 +743,21 @@ public sealed class DocumentEditViewModel : ViewModelBase, INotifyDataErrorInfo
                     
                     l.VatRate = prod.VatRate;
                     
-                    // R-271: Only auto-fill SalesPrice for non-purchase documents
-                    // Purchase documents require manual price entry (Cost not exposed in ProductRowDto)
-                    bool isPurchase = Dto.Type.StartsWith("PURCHASE", StringComparison.OrdinalIgnoreCase) ||
-                                      string.Equals(Dto.Type, "GELEN_IRSALIYE", StringComparison.OrdinalIgnoreCase);
-                    if (!isPurchase && l.UnitPrice == 0 && prod.SalesPrice > 0)
+                    // R-313: Adjustments should use Cost, not SalesPrice
+                    if (IsAdjustment)
                     {
-                        l.UnitPrice = prod.SalesPrice;
+                        l.UnitPrice = prod.Cost;
+                    }
+                    else
+                    {
+                        // R-271: Only auto-fill SalesPrice for non-purchase documents
+                        // Purchase documents require manual price entry (Cost not exposed in ProductRowDto)
+                        bool isPurchase = Dto.Type.StartsWith("PURCHASE", StringComparison.OrdinalIgnoreCase) ||
+                                          string.Equals(Dto.Type, "GELEN_IRSALIYE", StringComparison.OrdinalIgnoreCase);
+                        if (!isPurchase && l.UnitPrice == 0 && prod.SalesPrice > 0)
+                        {
+                            l.UnitPrice = prod.SalesPrice;
+                        }
                     }
                     
                     // If UOM still not selected after loading available UOMs, fall back to product base UOM

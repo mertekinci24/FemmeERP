@@ -55,9 +55,11 @@
                 <Label Grid.Row="0" Grid.Column="2" Content="Tarih:" FontWeight="SemiBold"/>
                 <DatePicker Grid.Row="0" Grid.Column="3" SelectedDate="{Binding Date}" Margin="0,0,10,5"/>
 
-                <Label Grid.Row="0" Grid.Column="4" Content="Cari:" FontWeight="SemiBold"/>
+                <Label Grid.Row="0" Grid.Column="4" Content="Cari:" FontWeight="SemiBold"
+                       Visibility="{Binding RequiresPartner, Converter={StaticResource BoolToVis}}"/>
                 <ComboBox Grid.Row="0" Grid.Column="5" ItemsSource="{Binding Partners}" 
-                          SelectedValue="{Binding PartnerId}" SelectedValuePath="Id" DisplayMemberPath="Name" Margin="0,0,0,5"/>
+                          SelectedValue="{Binding PartnerId}" SelectedValuePath="Id" DisplayMemberPath="Name" Margin="0,0,0,5"
+                          Visibility="{Binding RequiresPartner, Converter={StaticResource BoolToVis}}"/>
 
                 <!-- Row 1 -->
                 <Label Grid.Row="1" Grid.Column="0" Content="Açıklama:" FontWeight="SemiBold"/>
