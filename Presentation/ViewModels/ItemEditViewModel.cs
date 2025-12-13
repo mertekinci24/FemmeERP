@@ -9,9 +9,11 @@ using System.Windows.Input;
 using System.Security.Cryptography;
 using System.Text;
 using InventoryERP.Application.Products;
+using InventoryERP.Application.Common.Exceptions;
 using InventoryERP.Presentation.Commands;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
+using Serilog;
 
 namespace InventoryERP.Presentation.ViewModels
 {
@@ -25,6 +27,7 @@ namespace InventoryERP.Presentation.ViewModels
 		private readonly AppDbContext _db;
 		private readonly IPriceListService _priceListService;
 		private readonly Abstractions.IDialogService _dialogService;
+		private readonly ILogger? _logger; // R-358: Optional logger for error tracking
 		private readonly int? _productId;
 
 		// Basic Product Fields (existing fields only, no new DB fields)
@@ -106,7 +109,7 @@ namespace InventoryERP.Presentation.ViewModels
 		set => SetProperty(ref _cost, value); 
 	}
 
-	// R-234: Sales Price (Satış Fiyatı) for invoice auto-fill
+	// R-234: Sales Price (Satis Fiyati) for invoice auto-fill
 	private decimal _salesPrice = 0m;
 	public decimal SalesPrice 
 	{ 
@@ -240,12 +243,13 @@ namespace InventoryERP.Presentation.ViewModels
 	private int? _defaultLocationId;
 	public int? DefaultLocationId { get => _defaultLocationId; set => SetProperty(ref _defaultLocationId, value); }
 
-	public ItemEditViewModel(AppDbContext db, IPriceListService priceListService, Abstractions.IDialogService dialogService, int? productId = null)
+	public ItemEditViewModel(AppDbContext db, IPriceListService priceListService, Abstractions.IDialogService dialogService, int? productId = null, ILogger? logger = null)
 	{
 		_db = db ?? throw new ArgumentNullException(nameof(db));
 		_priceListService = priceListService ?? throw new ArgumentNullException(nameof(priceListService));
 		_dialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
 		_productId = productId;
+		_logger = logger; // R-358: Optional logger injection
 
 		SaveCmd = new AsyncRelayCommand(SaveAsync, () => CanSave(null));
 		GenerateBarcodeCmd = new AsyncRelayCommand(GenerateBarcodeAsync);
@@ -326,7 +330,7 @@ namespace InventoryERP.Presentation.ViewModels
 		// R-229: Load Cost (Maliyet) from product
 		Cost = product.Cost;
 		
-		// R-234: Load SalesPrice (Satış Fiyatı) from product
+		// R-234: Load SalesPrice (Satis Fiyati) from product
 		SalesPrice = product.SalesPrice;
 
 		// Load UOMs
@@ -409,7 +413,7 @@ namespace InventoryERP.Presentation.ViewModels
 			}
 		}
 
-		throw new Exception("Barkod üretilemedi, lütfen manuel giriniz.");
+		throw new Exception("Barkod uretilemedi, lutfen manuel giriniz.");
 	}
 
 	private async Task GenerateBarcodeAsync()
@@ -433,7 +437,7 @@ namespace InventoryERP.Presentation.ViewModels
 					return;
 				}
 			}
-			_dialogService.ShowMessageBox("Barkod üretilemedi.", "Hata");
+			_dialogService.ShowMessageBox("Barkod uretilemedi.", "Hata");
 		}
 		catch (Exception ex)
 		{
@@ -457,7 +461,7 @@ namespace InventoryERP.Presentation.ViewModels
             // R-210.4: Validate DefaultLocation if InitialStock is set
             if (!_productId.HasValue && InitialStock > 0 && !DefaultLocationId.HasValue)
             {
-                _dialogService.ShowMessageBox("Açılış stoğu girdiğiniz için Varsayılan Konum seçmelisiniz.", "Uyarı");
+                _dialogService.ShowMessageBox("Acilis stogu girdiginiz icin Varsayilan Konum secmelisiniz.", "Uyari");
                 return;
             }
 
@@ -517,7 +521,7 @@ namespace InventoryERP.Presentation.ViewModels
 					QtySigned = InitialStock,
 					UnitCost = 0, // Opening stock, no cost yet
 					DestinationLocationId = DefaultLocationId!.Value,
-					Note = "Açılış stoğu"
+					Note = "Acilis stogu"
 				});
 
 				await _db.SaveChangesAsync();
@@ -573,33 +577,42 @@ namespace InventoryERP.Presentation.ViewModels
 		}
 		catch (Exception ex)
 		{
-			var errorMsg = $"Kaydetme sÄ±rasÄ±nda hata oluÅŸtu: {ex.Message}";
-			if (ex.InnerException != null)
+			// R-358: Enterprise error handling with reference tracking
+			var errorRef = Guid.NewGuid();
+			
+			// Fail-safe logging (must never crash the app)
+			try
 			{
-				errorMsg += $"\n\nDetay: {ex.InnerException.Message}";
+				_logger?.Error(ex, "R-358: SaveAsync failed | Ref: {ErrorRef} | Product: {ProductId}", errorRef, _productId);
 			}
-			_dialogService.ShowMessageBox(errorMsg, "Hata");
+			catch { /* Swallow to allow UI notification */ }
+			
+			// User-friendly message with reference code
+			var friendlyMsg = ErrorTranslator.Humanize(ex) + $"\n\n(Hata Kodu: {errorRef:N})";
+			_dialogService.ShowMessageBox(friendlyMsg, "Kaydetme Hatasi");
 		}
-	}		private void Cancel()
-		{
-			DialogResult = false;
-			// Close dialog - will be handled by the view
-		}
+	}
 
-		private bool CanAddUom(object? param = null)
-		{
-			return !string.IsNullOrWhiteSpace(NewUomName) && NewUomCoefficient > 0;
-		}
+	private void Cancel()
+	{
+		DialogResult = false;
+		// Close dialog - will be handled by the view
+	}
 
-		private void AddUom()
+	private bool CanAddUom(object? param = null)
+	{
+		return !string.IsNullOrWhiteSpace(NewUomName) && NewUomCoefficient > 0;
+	}
+
+	private void AddUom()
+	{
+		if (CanAddUom(null))
 		{
-			if (CanAddUom(null))
-			{
-				UomList.Add(new ProductUomRow(0, NewUomName, NewUomCoefficient));
-				NewUomName = "";
-				NewUomCoefficient = 1m;
-			}
+			UomList.Add(new ProductUomRow(0, NewUomName, NewUomCoefficient));
+			NewUomName = "";
+			NewUomCoefficient = 1m;
 		}
+	}
 
 	private void RemoveUom(ProductUomRow? uomRow)
 	{
@@ -672,13 +685,13 @@ namespace InventoryERP.Presentation.ViewModels
 	{
 		if (string.IsNullOrWhiteSpace(NewListCode) || string.IsNullOrWhiteSpace(NewPriceUomName) || NewUnitPrice <= 0)
 		{
-			_dialogService.ShowMessageBox("LÃ¼tfen tÃ¼m alanlarÄ± doldurun (Liste Kodu, Birim, Fiyat > 0)", "Eksik Bilgi");
+			_dialogService.ShowMessageBox("Lutfen tum alanlari doldurun (Liste Kodu, Birim, Fiyat > 0)", "Eksik Bilgi");
 			return;
 		}
 
 		if (NewValidFrom.HasValue && NewValidTo.HasValue && NewValidFrom.Value >= NewValidTo.Value)
 		{
-			_dialogService.ShowMessageBox("BaÅŸlangÄ±Ã§ tarihi bitiÅŸ tarihinden Ã¶nce olmalÄ±dÄ±r", "GeÃ§ersiz Tarih");
+			_dialogService.ShowMessageBox("Baslangic tarihi bitis tarihinden once olmalidir", "Gecersiz Tarih");
 			return;
 		}
 
@@ -820,7 +833,7 @@ namespace InventoryERP.Presentation.ViewModels
 	{
 		if (string.IsNullOrWhiteSpace(NewAttributeName) || string.IsNullOrWhiteSpace(NewAttributeValues))
 		{
-			_dialogService.ShowMessageBox("LÃ¼tfen Ã¶zellik adÄ± ve deÄŸerlerini girin", "Eksik Bilgi");
+			_dialogService.ShowMessageBox("Lutfen ozellik adi ve degerlerini girin", "Eksik Bilgi");
 			return;
 		}
 
@@ -832,7 +845,7 @@ namespace InventoryERP.Presentation.ViewModels
 
 		if (values.Count == 0)
 		{
-			_dialogService.ShowMessageBox("LÃ¼tfen en az bir deÄŸer girin", "Eksik Bilgi");
+			_dialogService.ShowMessageBox("Lutfen en az bir deger girin", "Eksik Bilgi");
 			return;
 		}
 
@@ -856,13 +869,13 @@ namespace InventoryERP.Presentation.ViewModels
 	{
 		if (VariantAttributes.Count == 0)
 		{
-			_dialogService.ShowMessageBox("LÃ¼tfen Ã¶nce varyant Ã¶zelliklerini ekleyin", "Eksik Bilgi");
+			_dialogService.ShowMessageBox("Lutfen once varyant ozelliklerini ekleyin", "Eksik Bilgi");
 			return;
 		}
 
 		if (string.IsNullOrWhiteSpace(Sku))
 		{
-			_dialogService.ShowMessageBox("LÃ¼tfen Ã¶nce ana Ã¼rÃ¼n SKU'sunu girin", "Eksik Bilgi");
+			_dialogService.ShowMessageBox("Lutfen once ana urun SKU'sunu girin", "Eksik Bilgi");
 			return;
 		}
 
@@ -887,7 +900,7 @@ namespace InventoryERP.Presentation.ViewModels
 			GeneratedVariants.Add(new ProductVariantRow(0, variantCode, true));
 		}
 
-		_dialogService.ShowMessageBox($"{GeneratedVariants.Count} varyant oluÅŸturuldu", "BaÅŸarÄ±lÄ±");
+		_dialogService.ShowMessageBox($"{GeneratedVariants.Count} varyant olusturuldu", "Basarili");
 	}
 
 	// R-059: Generate cartesian product of attribute values
@@ -965,14 +978,14 @@ namespace InventoryERP.Presentation.ViewModels
 	{
 		if (NewBomComponentId == 0 || NewBomQtyPer <= 0)
 		{
-			_dialogService.ShowMessageBox("LÃ¼tfen bir hammadde seÃ§in ve miktar girin", "Eksik Bilgi");
+			_dialogService.ShowMessageBox("Lutfen bir hammadde secin ve miktar girin", "Eksik Bilgi");
 			return;
 		}
 
 		// Check if already added
 		if (BomList.Any(b => b.ComponentProductId == NewBomComponentId))
 		{
-			_dialogService.ShowMessageBox("Bu hammadde zaten eklenmiÅŸ", "UyarÄ±");
+			_dialogService.ShowMessageBox("Bu hammadde zaten eklenmis", "Uyari");
 			return;
 		}
 
@@ -1026,7 +1039,3 @@ public record BomItemRow(int Id, int ComponentProductId, string ComponentName, d
 // R-059: Component search result
 public record ComponentSearchResult(int Id, string Sku, string Name);
 }
-
-
-
-

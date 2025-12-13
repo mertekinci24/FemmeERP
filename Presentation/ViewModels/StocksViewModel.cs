@@ -174,6 +174,14 @@ namespace InventoryERP.Presentation.ViewModels
             foreach (var x in results) Rows.Add(x);
         }
 
+        // R-326: Safe Import Mode (Default: False = Safe)
+        private bool _importUpdateExisting;
+        public bool ImportUpdateExisting
+        {
+            get => _importUpdateExisting;
+            set => SetProperty(ref _importUpdateExisting, value);
+        }
+
         private async Task ImportCsvAsync()
         {
             try
@@ -186,8 +194,23 @@ namespace InventoryERP.Presentation.ViewModels
 
                 if (ofd.ShowDialog() == true)
                 {
-                    var count = await _importService.ImportProductsFromCsvAsync(ofd.FileName);
-                    _dialogService.ShowMessageBox($"{count} ürün başarıyla içe aktarıldı.", "Başarılı");
+                    // R-326: Pass safeMode inverse of UpdateExisting
+                    var result = await _importService.ImportProductsFromCsvAsync(ofd.FileName, safeMode: !ImportUpdateExisting);
+                    
+                    if (result.Skipped > 0)
+                    {
+                        var msg = $"İçe aktarma tamamlandı.\n\n" +
+                                  $"✅ Eklendi: {result.Added}\n" +
+                                  $"🔄 Güncellendi: {result.Updated}\n" +
+                                  $"⏭️ Atlandı (Mevcut): {result.Skipped}\n\n" +
+                                  $"Toplam: {result.Total}";
+                        _dialogService.ShowMessageBox(msg, "İçe Aktarma Sonucu");
+                    }
+                    else
+                    {
+                         _dialogService.ShowMessageBox($"{result.Added} ürün başarıyla eklendi, {result.Updated} güncellendi.", "Başarılı");
+                    }
+                    
                     await RefreshAsync();
                 }
             }

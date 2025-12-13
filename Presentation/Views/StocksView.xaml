@@ -26,6 +26,15 @@
                 Command="{Binding RefreshCmd}"
                 Width="100"
                 Margin="10,0,0,0" />
+
+        <!-- R-326: Safe Import Toggle -->
+        <CheckBox Content="Mevcut Kayıtları Güncelle"
+                  IsChecked="{Binding ImportUpdateExisting}"
+                  VerticalAlignment="Center"
+                  Margin="12,0,0,0"
+                  Foreground="#B91C1C"
+                  FontWeight="Bold"
+                  ToolTip="DİKKAT: İşaretlenirse, CSV'deki veriler mevcut ürünlerin üzerine yazılır (Fiyat, Ad, vb.)" />
         
         <!-- R-282: Show Inactive Checkbox -->
         <CheckBox Content="Pasifleri Göster"
@@ -134,7 +143,6 @@
             </Style>
           </DataGridTextColumn.ElementStyle>
         </DataGridTextColumn>
-        <DataGridTextColumn Header="Barkod" Binding="{Binding Barcode}" Width="110" />
         <DataGridTextColumn Header="Barkod" Binding="{Binding Barcode}" Width="110" />
         
         <!-- R-299: Excel Checkbox Box Filter -->

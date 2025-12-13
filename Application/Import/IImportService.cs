@@ -4,7 +4,7 @@ namespace InventoryERP.Application.Import;
 
 public interface IImportService
 {
-    Task<int> ImportProductsFromCsvAsync(string filePath);
+    Task<ImportResult> ImportProductsFromCsvAsync(string filePath, bool safeMode = true);
     Task<int> ImportPartnersFromCsvAsync(string filePath);
     Task<int> ImportOpeningBalancesFromCsvAsync(string filePath);
 }

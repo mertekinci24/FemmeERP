@@ -534,13 +534,14 @@ namespace InventoryERP.Presentation.ViewModels
                 _logger.Debug("R-037: Dialog reference'Ä± serbest bÄ±rakÄ±lÄ±yor (dlg = null)");
                 dlg = null; // Release dialog reference
                 
-                _logger.Information("R-037: ImportService Ã§aÄŸrÄ±lÄ±yor...");
+                _logger.Information("R-037: ImportService çağrılıyor...");
                 using var scope = _scopeFactory.CreateScope();
                 var svc = scope.ServiceProvider.GetRequiredService<InventoryERP.Application.Import.IImportService>();
-                var count = await svc.ImportProductsFromCsvAsync(fileName);
+                // R-326: Default to Safe Mode (UpdateExisting = false) for this view
+                var result = await svc.ImportProductsFromCsvAsync(fileName, safeMode: true);
                 
-                _logger.Information("R-037: Import baÅŸarÄ±lÄ±. {Count} Ã¼rÃ¼n iÃ§e aktarÄ±ldÄ±", count);
-                System.Windows.MessageBox.Show($"{count} Ã¼rÃ¼n iÃ§e aktarÄ±ldÄ±.", "ÃœrÃ¼nleri Ä°Ã§e Aktar", System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Information);
+                _logger.Information("R-037: Import başarılı. {Added} eklendi, {Updated} güncellendi", result.Added, result.Updated);
+                System.Windows.MessageBox.Show($"{result.Added} ürün eklendi. (Güvenli Mod: Mevcutlar atlandı)", "Ürünleri İçe Aktar", System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Information);
             }
             catch (Exception ex)
             {

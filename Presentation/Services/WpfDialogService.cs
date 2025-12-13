@@ -133,7 +133,7 @@ namespace InventoryERP.Presentation.Services
             var priceSvc = scope.ServiceProvider.GetRequiredService<InventoryERP.Application.Products.IPriceListService>();
             var dialogSvc = scope.ServiceProvider.GetRequiredService<Abstractions.IDialogService>();
 
-            var vm = new ViewModels.ItemEditViewModel(db, priceSvc, dialogSvc, productId);
+            var vm = new ViewModels.ItemEditViewModel(db, priceSvc, dialogSvc, productId, Serilog.Log.Logger);
             var dlg = new Views.ItemEditDialog(vm);
 
             try

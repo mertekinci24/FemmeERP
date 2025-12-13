@@ -51,7 +51,8 @@ public static class DependencyInjection
     // R-032: Inventory Valuation
     services.AddTransient<InventoryERP.Application.Stocks.IInventoryValuationService, Infrastructure.Services.InventoryValuationService>();
     // R-033: CSV import service
-    services.AddTransient<InventoryERP.Application.Import.IImportService, Infrastructure.Services.ImportService>();
+    // R-341: Changed from Transient to Scoped - align lifetime with AppDbContext
+    services.AddScoped<InventoryERP.Application.Import.IImportService, Infrastructure.Services.ImportService>();
     // R-093: Excel import service for Partners
     services.AddTransient<InventoryERP.Application.Import.IExcelImportService, Infrastructure.Services.ExcelImportService>();
     // R-095: List export services (Excel and PDF)
@@ -61,6 +62,8 @@ public static class DependencyInjection
     services.AddTransient<InventoryERP.Application.EInvoicing.IEInvoiceAdapter, Infrastructure.Adapters.MockEInvoiceAdapter>();
     // R-041: Price list service
     services.AddScoped<IPriceListService, PriceListService>();
+    // R-332: Barcode Service
+    services.AddScoped<Application.Products.IBarcodeService, Services.BarcodeService>();
         services.AddSingleton<Infrastructure.Services.ICompanyService, Infrastructure.Services.CompanyService>();
         // Excel exporter/importer statik olduğu için DI gerekmez, ama istenirse singleton olarak eklenebilir
         // Validasyon

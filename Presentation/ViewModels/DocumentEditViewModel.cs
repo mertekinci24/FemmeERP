@@ -14,6 +14,8 @@ using InventoryERP.Application.Products;
 using InventoryERP.Application.Partners;
 using InventoryERP.Domain.Entities;
 using InventoryERP.Domain.Enums; // R-092: Required for PartnerType enum
+using InventoryERP.Application.Common.Exceptions; // R-358: ErrorTranslator
+using Serilog; // R-358: Logging
 
 namespace InventoryERP.Presentation.ViewModels;
 
@@ -997,19 +999,31 @@ public sealed class DocumentEditViewModel : ViewModelBase, INotifyDataErrorInfo
         }
         catch (Exception ex)
         {
-            // R-160 R-069: Report exceptions via IDialogService (R-108) - do not swallow P0 errors
+            // R-358: Enterprise error handling with reference tracking
+            var errorRef = Guid.NewGuid();
+            
+            // Fail-safe logging (must never crash the app)
             try
             {
-                await _dialogService.ShowErrorAsync("R-160 Kaydetme HatasÄ±", ex.ToString());
+                Log.Error(ex, "R-358: DocumentEditViewModel.SaveAsync failed | Ref: {ErrorRef} | DocId: {DocId}", errorRef, Dto?.Id);
+            }
+            catch { /* Swallow to allow UI notification */ }
+            
+            // R-160 R-069: Report exceptions via IDialogService with friendly message
+            try
+            {
+                var friendlyMsg = ErrorTranslator.Humanize(ex) + $"\n\n(Hata Kodu: {errorRef:N})";
+                await _dialogService.ShowErrorAsync("Kaydetme Hatasi", friendlyMsg);
             }
             catch
             {
                 // Fallback if dialog service fails
-                System.Diagnostics.Debug.WriteLine($"[R-160 CRITICAL] SaveAsync failed: {ex}");
+                System.Diagnostics.Debug.WriteLine($"[R-358 CRITICAL] SaveAsync failed: {ex}");
             }
-                        // R-186: ensure DTO state is consistent after failure so user can retry
+            
+            // R-186: ensure DTO state is consistent after failure so user can retry
             try { Dto.Lines.Clear(); foreach (var l in Lines) { Dto.Lines.Add(new DocumentLineDto{ ItemId=l.ItemId, ItemName=l.ItemName, Qty=l.Qty, UnitPrice=l.UnitPrice, Uom=l.Uom, Coefficient=l.Coefficient, VatRate=l.VatRate, LineNet=l.LineNet, LineVat=l.LineVat, LineGross=l.LineGross, ProductVariantId=l.ProductVariantId, LotId=l.SelectedLotId, LotNumber= string.IsNullOrWhiteSpace(l.NewLotNumber)? null : l.NewLotNumber, ExpiryDate=l.NewExpiryDate, SourceLocationId=l.SourceLocationId, DestinationLocationId=l.DestinationLocationId }); } } catch { }
-return false;
+            return false;
         }
     }
 
